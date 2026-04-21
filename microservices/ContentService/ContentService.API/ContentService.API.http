@@ -1,0 +1,46 @@
+@ContentService_HostAddress = http://127.0.0.1:8084
+@AuthToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjlmMmEyMzM2LWI0ZmUtNDJkNS1iYTA2LThiYzkzNGQwNWM0OSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJJbnN0cnVjdG9yIFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJpbnN0cnVjdG9yQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiSW5zdHJ1Y3RvciIsImV4cCI6MTc3NjgwMjYwNiwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.aEULdnoi5bFaQZGENh_bnaIm2V4YVKk_96-lR583b9o
+
+### [ANYONE] Get All Lessons for a Course
+# Instruction: Paste the Course ID (Guid) at the end of the URL
+# Example: Using course id f210d04a-a0dd-4e59-aa4e-1a5d94074e05
+GET {{ContentService_HostAddress}}/api/Lessons/course/e9bc0f22-0205-4d28-9102-c81798459ab2
+
+### [ANYONE] Get Specific Lesson
+# Instruction: Paste the Content(lesson) ID (Guid) at the end of the URL
+GET {{ContentService_HostAddress}}/api/Lessons/ad6c97c7-c2d7-4969-bac3-6af3d52ca463
+
+### [INSTRUCTOR/ADMIN] Create Lesson
+# Used by: Instructors or Admins to add content to a specific course
+# Instruction: Ensure 'courseId' in the body matches an existing course from Course Service
+POST {{ContentService_HostAddress}}/api/Lessons
+Authorization: Bearer {{AuthToken}}
+Content-Type: application/json
+
+{
+  "courseId": "e9bc0f22-0205-4d28-9102-c81798459ab2",
+  "title": "Deep leaning basic introduction",
+  "description": "Deep Learning introduction as a start guide",
+  "contentUrl": "https://blobstorage.example.com/videos/m1.mp4",
+  "contentType": "Video",
+  "order": 1
+}
+
+### [INSTRUCTOR/ADMIN] Update Lesson
+# Instruction: Paste the Lesson ID in the URL and provide updated details in the body
+PUT {{ContentService_HostAddress}}/api/Lessons/ad6c97c7-c2d7-4969-bac3-6af3d52ca463
+Authorization: Bearer {{AuthToken}}
+Content-Type: application/json
+
+{
+  "title": "Deep leaning basic introduction",
+  "description": "Deep Learning introduction as a start guide",
+  "contentUrl": "https://blobstorage.example.com/videos/m1_v1.mp4",
+  "contentType": "Video",
+  "order": 1
+}
+
+### [INSTRUCTOR/ADMIN] Delete Lesson
+# Instruction: Paste the Lesson ID in the URL to remove it
+DELETE {{ContentService_HostAddress}}/api/Lessons/d7826501-3c46-42c3-a3cc-1113960a1532
+Authorization: Bearer {{AuthToken}}

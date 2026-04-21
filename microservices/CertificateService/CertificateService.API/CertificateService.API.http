@@ -1,0 +1,6 @@
+@CertificateService.API_HostAddress = http://localhost:5075
+
+GET {{CertificateService.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

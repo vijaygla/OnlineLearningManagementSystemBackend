@@ -1,0 +1,71 @@
+@IdentityService_HostAddress = http://127.0.0.1:8081
+
+### [ANYONE] Register Admin User
+# Used by: New Administrators to set up system access
+POST {{IdentityService_HostAddress}}/api/Auth/register
+Content-Type: application/json
+
+{
+  "name": "Admin User",
+  "email": "admin@example.com",
+  "password": "Password123!",
+  "role": "Admin"
+}
+
+### [ANYONE] Register Instructor User
+# Used by: Subject matter experts to create and manage courses
+POST {{IdentityService_HostAddress}}/api/Auth/register
+Content-Type: application/json
+
+{
+  "name": "Instructor User",
+  "email": "instructor@example.com",
+  "password": "Password123!",
+  "role": "Instructor"
+}
+
+### [ANYONE] Register Student User
+# Used by: Learners to enroll and view course content
+POST {{IdentityService_HostAddress}}/api/Auth/register
+Content-Type: application/json
+
+{
+  "name": "Student User",
+  "email": "student@example.com",
+  "password": "Password123!",
+  "role": "Student"
+}
+
+### [ANYONE] Login Admin User
+# Returns: JWT Token for Admin actions
+POST {{IdentityService_HostAddress}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "Password123!"
+}
+
+### [ANYONE] Login Instructor User
+# Returns: JWT Token for Instructor actions (Course creation, lesson management)
+POST {{IdentityService_HostAddress}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "instructor@example.com",
+  "password": "Password123!"
+}
+
+### [ANYONE] Login Student User
+# Returns: JWT Token for Student actions (Viewing courses, enrollment)
+POST {{IdentityService_HostAddress}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "student@example.com",
+  "password": "Password123!"
+}
+
+### [AUTHORIZED] Test Secure Endpoint
+GET {{IdentityService_HostAddress}}/api/Auth/secure
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjlmMmEyMzM2LWI0ZmUtNDJkNS1iYTA2LThiYzkzNGQwNWM0OSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJJbnN0cnVjdG9yIFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJpbnN0cnVjdG9yQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiSW5zdHJ1Y3RvciIsImV4cCI6MTc3NjgwMjYwNiwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.aEULdnoi5bFaQZGENh_bnaIm2V4YVKk_96-lR583b9o

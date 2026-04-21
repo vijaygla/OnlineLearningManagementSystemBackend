@@ -1,0 +1,78 @@
+<Solution>
+  <Folder Name="/gateway/">
+    <Project Path="gateway/ApiGateway/ApiGateway.csproj" />
+  </Folder>
+  <Folder Name="/microservices/" />
+  <Folder Name="/microservices/AssessmentService/">
+    <Project Path="microservices/AssessmentService/AssessmentService.API/AssessmentService.API.csproj" />
+    <Project Path="microservices/AssessmentService/AssessmentService.Application/AssessmentService.Application.csproj" />
+    <Project Path="microservices/AssessmentService/AssessmentService.Domain/AssessmentService.Domain.csproj" />
+    <Project Path="microservices/AssessmentService/AssessmentService.Infrastructure/AssessmentService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/CategoryService/">
+    <Project Path="microservices/CategoryService/CategoryService.API/CategoryService.API.csproj" />
+    <Project Path="microservices/CategoryService/CategoryService.Application/CategoryService.Application.csproj" />
+    <Project Path="microservices/CategoryService/CategoryService.Domain/CategoryService.Domain.csproj" />
+    <Project Path="microservices/CategoryService/CategoryService.Infrastructure/CategoryService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/CertificateService/">
+    <Project Path="microservices/CertificateService/CertificateService.API/CertificateService.API.csproj" />
+    <Project Path="microservices/CertificateService/CertificateService.Application/CertificateService.Application.csproj" />
+    <Project Path="microservices/CertificateService/CertificateService.Domain/CertificateService.Domain.csproj" />
+    <Project Path="microservices/CertificateService/CertificateService.Infrastructure/CertificateService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/ContentService/">
+    <Project Path="microservices/ContentService/ContentService.API/ContentService.API.csproj" />
+    <Project Path="microservices/ContentService/ContentService.Application/ContentService.Application.csproj" />
+    <Project Path="microservices/ContentService/ContentService.Domain/ContentService.Domain.csproj" />
+    <Project Path="microservices/ContentService/ContentService.Infrastructure/ContentService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/CourseService/">
+    <Project Path="microservices/CourseService/CourseService.API/CourseService.API.csproj" />
+    <Project Path="microservices/CourseService/CourseService.Application/CourseService.Application.csproj" />
+    <Project Path="microservices/CourseService/CourseService.Domain/CourseService.Domain.csproj" />
+    <Project Path="microservices/CourseService/CourseService.Infrastructure/CourseService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/EnrollmentService/">
+    <Project Path="microservices/EnrollmentService/EnrollmentService.API/EnrollmentService.API.csproj" />
+    <Project Path="microservices/EnrollmentService/EnrollmentService.Application/EnrollmentService.Application.csproj" />
+    <Project Path="microservices/EnrollmentService/EnrollmentService.Domain/EnrollmentService.Domain.csproj" />
+    <Project Path="microservices/EnrollmentService/EnrollmentService.Infrastructure/EnrollmentService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/IdentityService/">
+    <Project Path="microservices/IdentityService/IdentityService.API/IdentityService.API.csproj" />
+    <Project Path="microservices/IdentityService/IdentityService.Application/IdentityService.Application.csproj" />
+    <Project Path="microservices/IdentityService/IdentityService.Domain/IdentityService.Domain.csproj" />
+    <Project Path="microservices/IdentityService/IdentityService.Infrastructure/IdentityService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/MediaService/">
+    <Project Path="microservices/MediaService/MediaService.API/MediaService.API.csproj" />
+    <Project Path="microservices/MediaService/MediaService.Application/MediaService.Application.csproj" />
+    <Project Path="microservices/MediaService/MediaService.Domain/MediaService.Domain.csproj" />
+    <Project Path="microservices/MediaService/MediaService.Infrastructure/MediaService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/NotificationService/">
+    <Project Path="microservices/NotificationService/NotificationService.API/NotificationService.API.csproj" />
+    <Project Path="microservices/NotificationService/NotificationService.Application/NotificationService.Application.csproj" />
+    <Project Path="microservices/NotificationService/NotificationService.Domain/NotificationService.Domain.csproj" />
+    <Project Path="microservices/NotificationService/NotificationService.Infrastructure/NotificationService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/ProgressService/">
+    <Project Path="microservices/ProgressService/ProgressService.API/ProgressService.API.csproj" />
+    <Project Path="microservices/ProgressService/ProgressService.Application/ProgressService.Application.csproj" />
+    <Project Path="microservices/ProgressService/ProgressService.Domain/ProgressService.Domain.csproj" />
+    <Project Path="microservices/ProgressService/ProgressService.Infrastructure/ProgressService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/ReviewService/">
+    <Project Path="microservices/ReviewService/ReviewService.API/ReviewService.API.csproj" />
+    <Project Path="microservices/ReviewService/ReviewService.Application/ReviewService.Application.csproj" />
+    <Project Path="microservices/ReviewService/ReviewService.Domain/ReviewService.Domain.csproj" />
+    <Project Path="microservices/ReviewService/ReviewService.Infrastructure/ReviewService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/UserService/">
+    <Project Path="microservices/UserService/UserService.API/UserService.API.csproj" />
+    <Project Path="microservices/UserService/UserService.Application/UserService.Application.csproj" />
+    <Project Path="microservices/UserService/UserService.Domain/UserService.Domain.csproj" />
+    <Project Path="microservices/UserService/UserService.Infrastructure/UserService.Infrastructure.csproj" />
+  </Folder>
+</Solution>

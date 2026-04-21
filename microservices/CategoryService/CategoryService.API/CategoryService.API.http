@@ -1,0 +1,36 @@
+@CategoryService_HostAddress = http://127.0.0.1:8082
+@AuthToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjlmMmEyMzM2LWI0ZmUtNDJkNS1iYTA2LThiYzkzNGQwNWM0OSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJJbnN0cnVjdG9yIFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJpbnN0cnVjdG9yQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiSW5zdHJ1Y3RvciIsImV4cCI6MTc3NjgwMjYwNiwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.aEULdnoi5bFaQZGENh_bnaIm2V4YVKk_96-lR583b9o
+### [ANYONE] Get All Categories
+# Used by: Students and Instructors to browse course categories
+GET {{CategoryService_HostAddress}}/api/Categories
+
+### [ANYONE] Get Category By ID
+# Used by: Students to see details of a specific category
+GET {{CategoryService_HostAddress}}/api/Categories/5903e12c-b176-437b-b7fd-2068ec72f4c3
+
+### [ADMIN/INSTRUCTOR] Create Category
+# Used by: Administrators to define new subject areas
+POST {{CategoryService_HostAddress}}/api/Categories
+Authorization: Bearer {{AuthToken}}
+Content-Type: application/json
+
+{
+  "name": "Deep Learning",
+  "description": "This is deep learning category"
+}
+
+### [ADMIN] Update Category
+# Used by: Administrators to refine category details
+PUT {{CategoryService_HostAddress}}/api/Categories/f2c5fd32-1f66-498a-ac73-f02767af9184
+Authorization: Bearer {{AuthToken}}
+Content-Type: application/json
+
+{
+  "name": "Updated Cloud Computing",
+  "description": "Comprehensive guide to Cloud platforms"
+}
+
+### [ADMIN] Delete Category
+# Used by: Administrators to remove unused categories
+DELETE {{CategoryService_HostAddress}}/api/Categories/f2c5fd32-1f66-498a-ac73-f02767af9184
+Authorization: Bearer {{AuthToken}}

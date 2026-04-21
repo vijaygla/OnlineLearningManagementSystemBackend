@@ -1,0 +1,78 @@
+# Build output
+**/bin/
+**/obj/
+**/out/
+**/publish/
+**/TestResults/
+
+# Logs
+*.log
+logs/
+stdout.log
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+**/secrets.json
+**/appsettings.json
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/appsettings.*.local.json
+*.pfx
+*.snk
+*.key
+*.pem
+*.crt
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDE/editor
+.vs/
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Package caches
+packages/
+*.nupkg
+*.snupkg
+
+# Coverage and analysis
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+
+# Node artifacts if frontend tooling is added later
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Docker overrides and local compose files
+docker-compose.override.yml
+docker-compose.*.local.yml
+
+# Database and local storage artifacts
+*.mdf
+*.ldf
+*.db
+*.sqlite
+*.sqlite3
+
+# microsercise app setting
+*.appsettings.json
+
