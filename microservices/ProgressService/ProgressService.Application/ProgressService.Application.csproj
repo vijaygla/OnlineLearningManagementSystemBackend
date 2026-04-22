@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProgressService.Domain\ProgressService.Domain.csproj" />
+    <ProjectReference Include="..\..\..\shared\SharedKernel\SharedKernel.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

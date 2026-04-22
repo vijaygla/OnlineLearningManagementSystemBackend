@@ -1,6 +1,23 @@
-@ProgressService.API_HostAddress = http://localhost:5118
+@ProgressService_HostAddress = http://127.0.0.1:8086
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjVmOThiMWU3LTZmMDMtNDJjZC1iN2YxLWU0Y2U5YjNhNzQ2YiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJTdHVkZW50IFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHVkZW50QGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiU3R1ZGVudCIsImV4cCI6MTc3Njg4OTEzOSwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.VwUHyK8xSXp1n_mqs_Rgpk2Dc1oA48KQ6l5H74YszTg
+@CourseId = d7826501-3c46-42c3-a3cc-1113960a1532
+@LessonId = YOUR_LESSON_GUID_HERE
 
-GET {{ProgressService.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### [STUDENT] Mark Lesson as Complete
+# Access: Any authenticated student.
+# Usage: Use this when a student finishes a video or reading material.
+POST {{ProgressService_HostAddress}}/api/Progress/mark-complete
+Content-Type: application/json
+Authorization: Bearer {{Token}}
 
-###
+{
+  "courseId": "{{CourseId}}",
+  "lessonId": "{{LessonId}}",
+  "isCompleted": true
+}
+
+### [STUDENT] Get Course Progress
+# Access: The student themselves.
+# Usage: Returns a summary of all completed lessons and overall percentage for a specific course.
+GET {{ProgressService_HostAddress}}/api/Progress/course/{{CourseId}}
+Authorization: Bearer {{Token}}
