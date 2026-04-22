@@ -1,0 +1,10 @@
+using EnrollmentService.Application.DTOs;
+
+namespace EnrollmentService.Application.Interfaces;
+
+public interface IEnrollmentService
+{
+    Task<EnrollmentResponseDto> EnrollStudentAsync(Guid studentId, EnrollmentRequestDto request);
+    Task<IEnumerable<EnrollmentResponseDto>> GetStudentEnrollmentsAsync(Guid studentId);
+    Task<EnrollmentResponseDto?> GetEnrollmentDetailsAsync(Guid id);
+}

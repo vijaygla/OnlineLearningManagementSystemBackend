@@ -1,6 +1,30 @@
-@EnrollmentService.API_HostAddress = http://localhost:5053
+@EnrollmentService_HostAddress = http://127.0.0.1:8085
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjVmOThiMWU3LTZmMDMtNDJjZC1iN2YxLWU0Y2U5YjNhNzQ2YiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJTdHVkZW50IFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHVkZW50QGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiU3R1ZGVudCIsImV4cCI6MTc3Njg4OTEzOSwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.VwUHyK8xSXp1n_mqs_Rgpk2Dc1oA48KQ6l5H74YszTg
+@CourseId = d7826501-3c46-42c3-a3cc-1113960a1532
+@EnrollmentId = 6675e5d4-e0c7-4f1f-a7c6-59809d113af8
 
-GET {{EnrollmentService.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### [STUDENT] Enroll in a Course
+# Access: Any authenticated user (typically Student role).
+# Usage: Provide a valid CourseId from the CourseService to join the course.
+# Note: The StudentId is automatically extracted from your JWT Token.
+POST {{EnrollmentService_HostAddress}}/api/Enrollment
+Content-Type: application/json
+Authorization: Bearer {{Token}}
 
-###
+{
+  "courseId": "{{CourseId}}"
+}
+
+### [STUDENT] Get My Enrollments
+# Access: Any authenticated student.
+# Usage: Use this to see all courses you are currently enrolled in.
+GET {{EnrollmentService_HostAddress}}/api/Enrollment/my-enrollments
+Authorization: Bearer {{Token}}
+
+### [STUDENT / ADMIN] Get Enrollment Details
+# Access: 
+#   1. The specific Student who owns this enrollment record.
+#   2. Any user with an 'Admin' role.
+# Usage: Replace {{EnrollmentId}} with a GUID returned from the 'Get My Enrollments' request.
+GET {{EnrollmentService_HostAddress}}/api/Enrollment/{{EnrollmentId}}
+Authorization: Bearer {{Token}}

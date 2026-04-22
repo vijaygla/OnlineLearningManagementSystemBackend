@@ -28,11 +28,11 @@ builder.Logging.AddConsole();
 
 builder.Services.AddControllers();
 
-var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION") 
+var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION")
                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
-var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET") 
-             ?? builder.Configuration["Jwt:Key"] 
+var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
+             ?? builder.Configuration["Jwt:Key"]
              ?? "THIS_IS_SECRET_KEY_CHANGE_IT_1234567890";
 
 Console.WriteLine($"🔍 Using Connection String: {(string.IsNullOrEmpty(connectionString) ? "MISSING" : "FOUND")}");
@@ -42,7 +42,7 @@ var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "IdentityService";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "IdentityServiceClients";
 
 builder.Services.AddDbContext<CategoryDbContext>(options =>
-    options.UseSqlServer(connectionString, sqlOptions => 
+    options.UseSqlServer(connectionString, sqlOptions =>
     {
         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
         sqlOptions.CommandTimeout(60);
@@ -80,7 +80,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer"
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement { { new OpenApiSecurityScheme {
-        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } 
+        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { }
     } });
 });
 
@@ -89,25 +89,25 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<CategoryDbContext>();
-    try 
+    try
     {
         Console.WriteLine("--- ☁️ Syncing Database (CategoryService)... ---");
         var databaseCreator = dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
         if (databaseCreator != null)
         {
             if (!databaseCreator.Exists()) databaseCreator.Create();
-            
-            try 
+
+            try
             {
                 // Silently check if the table exists
                 dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Categories");
             }
-            catch 
+            catch
             {
                 databaseCreator.CreateTables();
             }
         }
-        Console.WriteLine("✅ Database sync process completed!");
+        Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex) { Console.WriteLine($"⚠️ Sync notice: {ex.Message}"); }
 }

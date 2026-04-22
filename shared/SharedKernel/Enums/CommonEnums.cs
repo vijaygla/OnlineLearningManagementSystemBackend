@@ -8,3 +8,11 @@ public enum CourseStatus
     Published,
     Archived
 }
+
+public enum EnrollmentStatus
+{
+    Active,
+    Completed,
+    Cancelled,
+    Suspended
+}
