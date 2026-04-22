@@ -52,6 +52,24 @@ public class AuthController : ControllerBase
         }
     }
 
+    [HttpPost("google-login")]
+    public async Task<IActionResult> GoogleLogin(GoogleLoginRequestDto dto)
+    {
+        try
+        {
+            var result = await _auth.LoginWithGoogleAsync(dto);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [Authorize]
     [HttpGet("secure")]
     public IActionResult Secure()
