@@ -1,6 +1,29 @@
-@CertificateService.API_HostAddress = http://localhost:5075
+@CertificateService_HostAddress = http://localhost:8088
+@Gateway_HostAddress = http://localhost:5000
+@AuthToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjlmMmEyMzM2LWI0ZmUtNDJkNS1iYTA2LThiYzkzNGQwNWM0OSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJJbnN0cnVjdG9yIFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJpbnN0cnVjdG9yQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiSW5zdHJ1Y3RvciIsImV4cCI6MTc3NjkzMjM4MCwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.BqzDvAqGn0GntnNxYd8sQks3NSH9P5kjHlrZyGRuXa8
+@certificateId = 6f3ca087-60ce-4a0f-a2b6-220921bf0ece
 
-GET {{CertificateService.API_HostAddress}}/weatherforecast/
-Accept: application/json
+### Issue a Certificate
+# Access: Admin or Instructor
+POST {{Gateway_HostAddress}}/api/certificates/issue
+Authorization: Bearer {{AuthToken}}
+Content-Type: application/json
 
-###
+{
+  "studentId": "9f2a2336-b4fe-42d5-ba06-8bc934d05c49",
+  "courseId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+
+### Get My Certificates
+# Access: Student
+GET {{Gateway_HostAddress}}/api/certificates/student
+Authorization: Bearer {{AuthToken}}
+
+### Get Certificate Details
+# Access: Student (Own) or Admin
+GET {{Gateway_HostAddress}}/api/certificates/{{certificateId}}
+Authorization: Bearer {{AuthToken}}
+
+### Verify a Certificate
+# Access: Anonymous
+GET {{Gateway_HostAddress}}/api/certificates/verify/CERT-C281484017944BCA
