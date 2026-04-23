@@ -82,6 +82,16 @@ services:
       - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
 
+  reviewservice:
+    build:
+      context: ..
+      dockerfile: docker/services/review/Dockerfile
+    ports:
+      - "5009:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
+      - JWT_SECRET=${JWT_SECRET}
+
   apigateway:
     build:
       context: ..
@@ -97,6 +107,7 @@ services:
       - ReverseProxy__Clusters__progress-cluster__Destinations__destination1__Address=http://progressservice:80
       - ReverseProxy__Clusters__assessment-cluster__Destinations__destination1__Address=http://assessmentservice:80
       - ReverseProxy__Clusters__certificate-cluster__Destinations__destination1__Address=http://certificateservice:80
+      - ReverseProxy__Clusters__review-cluster__Destinations__destination1__Address=http://reviewservice:80
     depends_on:
       - identityservice
       - courseservice
@@ -106,3 +117,4 @@ services:
       - progressservice
       - assessmentservice
       - certificateservice
+      - reviewservice
