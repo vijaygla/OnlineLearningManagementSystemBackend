@@ -10,6 +10,7 @@ services:
       - "5001:80"
     environment:
       - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
+      - JWT_SECRET=${JWT_SECRET}
 
   courseservice:
     build:
@@ -19,6 +20,57 @@ services:
       - "5002:80"
     environment:
       - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
+      - JWT_SECRET=${JWT_SECRET}
+
+  categoryservice:
+    build:
+      context: ..
+      dockerfile: docker/services/category/Dockerfile
+    ports:
+      - "5003:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
+      - JWT_SECRET=${JWT_SECRET}
+
+  contentservice:
+    build:
+      context: ..
+      dockerfile: docker/services/content/Dockerfile
+    ports:
+      - "5004:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
+      - JWT_SECRET=${JWT_SECRET}
+
+  enrollmentservice:
+    build:
+      context: ..
+      dockerfile: docker/services/enrollment/Dockerfile
+    ports:
+      - "5005:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
+      - JWT_SECRET=${JWT_SECRET}
+
+  progressservice:
+    build:
+      context: ..
+      dockerfile: docker/services/progress/Dockerfile
+    ports:
+      - "5006:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
+      - JWT_SECRET=${JWT_SECRET}
+
+  assessmentservice:
+    build:
+      context: ..
+      dockerfile: docker/services/assessment/Dockerfile
+    ports:
+      - "5007:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
+      - JWT_SECRET=${JWT_SECRET}
 
   apigateway:
     build:
@@ -26,3 +78,19 @@ services:
       dockerfile: docker/gateway/Dockerfile
     ports:
       - "5000:80"
+    environment:
+      - ReverseProxy__Clusters__identity-cluster__Destinations__destination1__Address=http://identityservice:80
+      - ReverseProxy__Clusters__category-cluster__Destinations__destination1__Address=http://categoryservice:80
+      - ReverseProxy__Clusters__course-cluster__Destinations__destination1__Address=http://courseservice:80
+      - ReverseProxy__Clusters__content-cluster__Destinations__destination1__Address=http://contentservice:80
+      - ReverseProxy__Clusters__enrollment-cluster__Destinations__destination1__Address=http://enrollmentservice:80
+      - ReverseProxy__Clusters__progress-cluster__Destinations__destination1__Address=http://progressservice:80
+      - ReverseProxy__Clusters__assessment-cluster__Destinations__destination1__Address=http://assessmentservice:80
+    depends_on:
+      - identityservice
+      - courseservice
+      - categoryservice
+      - contentservice
+      - enrollmentservice
+      - progressservice
+      - assessmentservice

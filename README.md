@@ -158,6 +158,7 @@ The repository includes Docker support under the `docker/` folder.
 cd docker
 docker-compose --env-file .env up --build
 ```
+`docker-compose -f docker/docker-compose.yml up --build` \____/
 
 ### Current Docker compose exposure
 
