@@ -2,7 +2,9 @@ using Google.Apis.Auth;
 using IdentityService.Application.DTOs;
 using IdentityService.Application.Interfaces;
 using IdentityService.Domain.Entities;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
+using Shared.Contracts.Events;
 
 namespace IdentityService.Application.Services;
 
@@ -11,12 +13,14 @@ public class AuthService : IAuthService
     private readonly IUserRepository _repo;
     private readonly ITokenService _token;
     private readonly IConfiguration _config;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public AuthService(IUserRepository repo, ITokenService token, IConfiguration config)
+    public AuthService(IUserRepository repo, ITokenService token, IConfiguration config, IPublishEndpoint publishEndpoint)
     {
         _repo = repo;
         _token = token;
         _config = config;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
@@ -40,6 +44,15 @@ public class AuthService : IAuthService
 
         await _repo.AddAsync(user);
 
+        // Publish UserCreatedEvent
+        await _publishEndpoint.Publish(new UserCreatedEvent
+        {
+            UserId = user.Id,
+            Email = user.Email,
+            FullName = user.Name,
+            CreatedAt = DateTime.UtcNow
+        });
+
         return new AuthResponseDto
         {
             Email = user.Email,
@@ -49,6 +62,7 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
     {
+        // ... (rest of LoginAsync remains unchanged)
         ValidateLoginRequest(request);
 
         var user = await _repo.GetByEmailAsync(request.Email.Trim());
@@ -101,6 +115,15 @@ public class AuthService : IAuthService
                     Role = "Student"
                 };
                 await _repo.AddAsync(user);
+
+                // Publish UserCreatedEvent for Google users
+                await _publishEndpoint.Publish(new UserCreatedEvent
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    FullName = user.Name,
+                    CreatedAt = DateTime.UtcNow
+                });
             }
 
             return new AuthResponseDto

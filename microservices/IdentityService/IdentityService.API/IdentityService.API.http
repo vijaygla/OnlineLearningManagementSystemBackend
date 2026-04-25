@@ -36,6 +36,18 @@ Content-Type: application/json
   "role": "Student"
 }
 
+### [ANYONE] Register Student User
+# Used by: Learners to enroll and view course content
+POST {{IdentityService_HostAddress}}/api/Auth/register
+Content-Type: application/json
+
+{
+  "name": "Vijay Kumar",
+  "email": "pmdhrs4@gmail.com",
+  "password": "Vijay@7763949572",
+  "role": "Student"
+}
+
 ### [ANYONE] Login Admin User
 # Returns: JWT Token for Admin actions
 POST {{IdentityService_HostAddress}}/api/Auth/login
@@ -64,6 +76,15 @@ Content-Type: application/json
 {
   "email": "student@example.com",
   "password": "Password123!"
+}
+
+### -----------student login-------------
+POST {{IdentityService_HostAddress}}/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "pmdhrs4@gmail.com",
+  "password": "Vijay@7763949572"
 }
 
 ### [ANYONE] Google Login

@@ -1,6 +1,8 @@
 using EnrollmentService.Application.DTOs;
 using EnrollmentService.Application.Interfaces;
 using EnrollmentService.Domain.Entities;
+using MassTransit;
+using Shared.Contracts.Events;
 using SharedKernel.Enums;
 
 namespace EnrollmentService.Application.Services;
@@ -8,10 +10,12 @@ namespace EnrollmentService.Application.Services;
 public class EnrollmentService : IEnrollmentService
 {
     private readonly IEnrollmentRepository _repo;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public EnrollmentService(IEnrollmentRepository repo)
+    public EnrollmentService(IEnrollmentRepository repo, IPublishEndpoint publishEndpoint)
     {
         _repo = repo;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<EnrollmentResponseDto> EnrollStudentAsync(Guid studentId, EnrollmentRequestDto request)
@@ -35,6 +39,17 @@ public class EnrollmentService : IEnrollmentService
         };
 
         await _repo.AddAsync(enrollment);
+
+        // Publish event to RabbitMQ
+        await _publishEndpoint.Publish(new EnrollmentCreatedEvent
+        {
+            EnrollmentId = enrollment.Id,
+            StudentId = studentId,
+            CourseId = request.CourseId,
+            StudentEmail = "student@example.com", // In a real scenario, fetch this from Identity/User service
+            CourseName = "Sample Course", // In a real scenario, fetch this from Course service
+            CreatedAt = enrollment.CreatedAt
+        });
 
         return MapToDto(enrollment);
     }

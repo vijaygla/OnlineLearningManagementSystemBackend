@@ -81,6 +81,31 @@ The solution uses a service-per-domain layout so features can evolve independent
 - `MediaService`
 - `UserService`
 
+## Notification System Architecture
+The project uses an asynchronous, event-driven architecture to handle system-wide notifications without blocking core business logic.
+
+### 🛠 Technologies & Dependencies:
+- **MassTransit.RabbitMQ**: Distributed application framework used to manage message bus communication.
+- **RabbitMQ**: The message broker that handles the queuing and delivery of events.
+- **MailKit & MimeKit**: Robust libraries used for formatting and sending HTML emails via SMTP.
+- **Swashbuckle.AspNetCore**: Provides Swagger UI and API documentation for service monitoring.
+- **Mailhog**: A developer tool that acts as a local SMTP server and web-based email inbox for testing.
+
+### 🔄 Event Flow (Step-by-Step):
+1.  **Trigger**: A domain event occurs in a microservice (e.g., `EnrollmentService` completes a new student enrollment).
+2.  **Publish**: The source service publishes a `Shared.Contracts.Events.EnrollmentCreatedEvent` to the RabbitMQ exchange.
+3.  **Transport**: RabbitMQ routes the message to the `enrollment-created-queue` based on configured bindings.
+4.  **Consume**: The `NotificationService` (running as a background consumer) detects the message and triggers the `EnrollmentCreatedConsumer`.
+5.  **Process**: The consumer extracts student details and course information, then constructs a personalized HTML email.
+6.  **Delivery**: The `EmailService` connects to the SMTP server (Mailhog in dev) and delivers the message.
+7.  **Verification**: The process is logged for monitoring, and the message is acknowledged in the queue upon successful delivery.
+
+### 🚀 Monitoring & Local Setup:
+- **Health Check**: Verify the service status at `http://localhost:8090/health`.
+- **RabbitMQ Management**: Monitor queues at [http://localhost:15672](http://localhost:15672) (guest/guest).
+- **Mailhog Inbox**: View sent emails at [http://localhost:8025](http://localhost:8025).
+- **Service Port**: Locally runs on `8090` to avoid conflicts with other services.
+
 ## Prerequisites
 
 Before running the project, make sure you have:

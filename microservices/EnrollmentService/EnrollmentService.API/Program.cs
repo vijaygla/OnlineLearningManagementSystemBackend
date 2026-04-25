@@ -3,6 +3,7 @@ using EnrollmentService.Application.Interfaces;
 using EnrollmentService.Application.Services;
 using EnrollmentService.Infrastructure.Data;
 using EnrollmentService.Infrastructure.Repositories;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -52,6 +53,20 @@ builder.Services.AddDbContext<EnrollmentDbContext>(options =>
 builder.Services.AddScoped<IEnrollmentRepository, EnrollmentRepository>();
 builder.Services.AddScoped<IEnrollmentService, EnrollmentService.Application.Services.EnrollmentService>();
 
+// MassTransit Configuration
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var rabbitHost = Environment.GetEnvironmentVariable("RabbitMQ__Host") ?? "localhost";
+        cfg.Host(rabbitHost, "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+    });
+});
+
 var key = Encoding.UTF8.GetBytes(jwtKey);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
@@ -99,7 +114,6 @@ using (var scope = app.Services.CreateScope())
             try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Enrollments"); }
             catch { databaseCreator.CreateTables(); }
         }
-        Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex) { Console.WriteLine($"⚠️ Sync notice: {ex.Message}"); }
 }
@@ -113,7 +127,8 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8085";
+Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Enrollment Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
 
-app.Run();
+app.Run($"http://127.0.0.1:{port}");

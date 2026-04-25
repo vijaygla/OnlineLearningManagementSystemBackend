@@ -92,6 +92,36 @@ services:
       - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
 
+  notificationservice:
+    build:
+      context: ..
+      dockerfile: docker/services/notification/Dockerfile
+    ports:
+      - "5010:80"
+    environment:
+      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
+      - JWT_SECRET=${JWT_SECRET}
+      - RabbitMQ__Host=rabbitmq
+      - Smtp__Host=mailhog
+      - Smtp__Port=1025
+      - Smtp__SenderEmail=noreply@lms.com
+      - Smtp__SenderName=LMS Notifications
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
   apigateway:
     build:
       context: ..
@@ -108,6 +138,7 @@ services:
       - ReverseProxy__Clusters__assessment-cluster__Destinations__destination1__Address=http://assessmentservice:80
       - ReverseProxy__Clusters__certificate-cluster__Destinations__destination1__Address=http://certificateservice:80
       - ReverseProxy__Clusters__review-cluster__Destinations__destination1__Address=http://reviewservice:80
+      - ReverseProxy__Clusters__notification-cluster__Destinations__destination1__Address=http://notificationservice:80
     depends_on:
       - identityservice
       - courseservice
@@ -118,3 +149,4 @@ services:
       - assessmentservice
       - certificateservice
       - reviewservice
+      - notificationservice

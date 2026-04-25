@@ -107,7 +107,6 @@ using (var scope = app.Services.CreateScope())
                 databaseCreator.CreateTables();
             }
         }
-        Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex) { Console.WriteLine($"⚠️ Sync notice: {ex.Message}"); }
 }
@@ -121,7 +120,8 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8082";
+Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Category Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
 
-app.Run();
+app.Run($"http://127.0.0.1:{port}");
