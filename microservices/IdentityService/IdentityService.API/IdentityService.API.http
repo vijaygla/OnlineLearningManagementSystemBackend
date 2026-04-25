@@ -30,23 +30,12 @@ POST {{IdentityService_HostAddress}}/api/Auth/register
 Content-Type: application/json
 
 {
-  "name": "Student User",
-  "email": "student@example.com",
-  "password": "Password123!",
+  "name": "Student1",
+  "email": "student1@gmail.com",
+  "password": "Student1@123",
   "role": "Student"
 }
 
-### [ANYONE] Register Student User
-# Used by: Learners to enroll and view course content
-POST {{IdentityService_HostAddress}}/api/Auth/register
-Content-Type: application/json
-
-{
-  "name": "Vijay Kumar",
-  "email": "pmdhrs4@gmail.com",
-  "password": "Vijay@7763949572",
-  "role": "Student"
-}
 
 ### [ANYONE] Login Admin User
 # Returns: JWT Token for Admin actions
@@ -74,17 +63,8 @@ POST {{IdentityService_HostAddress}}/api/Auth/login
 Content-Type: application/json
 
 {
-  "email": "student@example.com",
-  "password": "Password123!"
-}
-
-### -----------student login-------------
-POST {{IdentityService_HostAddress}}/api/Auth/login
-Content-Type: application/json
-
-{
-  "email": "pmdhrs4@gmail.com",
-  "password": "Vijay@7763949572"
+  "email": "student1@gmail.com",
+  "password": "Student1@123"
 }
 
 ### [ANYONE] Google Login
@@ -98,4 +78,4 @@ Content-Type: application/json
 
 ### [AUTHORIZED] Test Secure Endpoint
 GET {{IdentityService_HostAddress}}/api/Auth/secure
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjVmOThiMWU3LTZmMDMtNDJjZC1iN2YxLWU0Y2U5YjNhNzQ2YiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJTdHVkZW50IFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHVkZW50QGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiU3R1ZGVudCIsImV4cCI6MTc3Njg4OTEzOSwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.VwUHyK8xSXp1n_mqs_Rgpk2Dc1oA48KQ6l5H74YszTg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjVmOThiMWU3LTZmMDMtNDJjZC1iN2YxLWU0Y2U5YjNhNzQ2YiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJTdHVkZW50IFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHVkZW50QGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiU3R1ZGVudCIsImV4cCI6MTc3NzEyMDM3OSwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.oMuDoXgp2Yb8TToIYOR0S4S6JBsdteoUvI2hqStrvZQ

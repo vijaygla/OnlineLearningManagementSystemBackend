@@ -266,3 +266,22 @@ dotnet add package Swashbuckle.AspNetCore
 ## License
 
 This project currently has no license file defined in the repository. Add one if you plan to make the project public on GitHub.
+
+
+# Microservices and thier port
+✅ Database connected successfully!
+🚀 [Service Name] is running on port [Port]
+📖 Swagger UI: http://127.0.0.1:[Port]/swagger
+  The microservices and their ports are:
+   - IdentityService: 8081
+   - CategoryService: 8082
+   - CourseService: 8083
+   - ContentService: 8084
+   - EnrollmentService: 8085
+   - AssessmentService: 8087
+   - CertificateService: 8088
+   - ReviewService: 8089
+   - NotificationService: 8090
+---
+
+## 

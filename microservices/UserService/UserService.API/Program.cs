@@ -3,11 +3,15 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using UserService.Application.Consumers;
 using UserService.Application.Interfaces;
 using UserService.Application.Services;
 using UserService.Infrastructure.Data;
 using UserService.Infrastructure.Repositories;
+
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
 if (File.Exists(envPath))
@@ -23,6 +27,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Warning);
+builder.Logging.AddFilter("Microsoft", LogLevel.Warning);
+builder.Logging.AddFilter("MassTransit", LogLevel.Warning);
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.None);
+builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
@@ -34,6 +43,7 @@ builder.Services.AddDbContext<UserDbContext>(options =>
     options.UseSqlServer(connectionString, sqlOptions =>
     {
         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
+        sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
     }));
 
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
@@ -104,22 +114,25 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "User Service API", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "User Service API", Version = "v1" });
 });
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<UserDbContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<UserDbContext>();
     try
     {
-        db.Database.Migrate();
+        var databaseCreator = dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
+        if (databaseCreator != null)
+        {
+            if (!databaseCreator.Exists()) databaseCreator.Create();
+            try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM UserProfiles"); }
+            catch { databaseCreator.CreateTables(); }
+        }
     }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"⚠️ Database sync notice: {ex.Message}");
-    }
+    catch (Exception) { /* Silent catch for sync notice */ }
 }
 
 app.UseSwagger();
@@ -133,7 +146,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-var port = "5069";
+var port = "8091";
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 User Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");

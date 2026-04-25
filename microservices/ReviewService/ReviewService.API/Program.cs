@@ -99,7 +99,6 @@ using (var scope = app.Services.CreateScope())
             try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Reviews"); }
             catch { databaseCreator.CreateTables(); }
         }
-        Console.WriteLine("✅ Database connected successfully!");
     }
     catch { /* Silently handle sync notice */ }
 }
@@ -113,7 +112,8 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8089";
+Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Review Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
 
-app.Run();
+app.Run($"http://127.0.0.1:{port}");

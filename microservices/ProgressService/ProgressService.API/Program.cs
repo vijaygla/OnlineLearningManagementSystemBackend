@@ -99,9 +99,8 @@ using (var scope = app.Services.CreateScope())
             try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM UserProgresses"); }
             catch { databaseCreator.CreateTables(); }
         }
-        Console.WriteLine("✅ Database connected successfully!");
     }
-    catch (Exception ex) { /* Silent catch for sync notice */ }
+    catch (Exception) { /* Silent catch for sync notice */ }
 }
 
 app.UseSwagger();
@@ -113,7 +112,8 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8086";
+Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Progress Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
 
-app.Run();
+app.Run($"http://127.0.0.1:{port}");

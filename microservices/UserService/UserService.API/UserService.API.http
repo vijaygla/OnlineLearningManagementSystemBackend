@@ -1,18 +1,21 @@
-@UserService_HostAddress = http://localhost:5069
-@AuthToken = YOUR_JWT_TOKEN_HERE
-
-### Get My Profile
+@UserService_HostAddress = http://localhost:8091
+@AuthToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImZkYTg4MTZhLTFlNWQtNGQ2ZC1iYmZjLWE1MGMwMjM4OTdhZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJTdHVkZW50MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InN0dWRlbnQxQGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlN0dWRlbnQiLCJleHAiOjE3NzcxMjI0MzksImlzcyI6IklkZW50aXR5U2VydmljZSIsImF1ZCI6IklkZW50aXR5U2VydmljZUNsaWVudHMifQ.NCCBU-leB1vvOPeXZgl34s4wjRmu7Bh1v30Iw9pzxtc
+### [AUTHORIZED] Get My Profile
+# Access: Any logged-in user (Student, Instructor, Admin)
+# Purpose: Allows a user to view their own personal profile data.
 GET {{UserService_HostAddress}}/api/user/profile
 Authorization: Bearer {{AuthToken}}
 Accept: application/json
 
-### Update My Profile
+### [AUTHORIZED] Update My Profile
+# Access: Any logged-in user
+# Purpose: Allows users to update their bio, skills, and contact info.
 PUT {{UserService_HostAddress}}/api/user/profile
 Authorization: Bearer {{AuthToken}}
 Content-Type: application/json
 
 {
-  "fullName": "John Doe Updated",
+  "fullName": "Student1",
   "bio": "Senior Software Engineer and Lifelong Learner",
   "profilePictureUrl": "https://example.com/profiles/johndoe.jpg",
   "phoneNumber": "+1234567890",
@@ -31,7 +34,9 @@ Content-Type: application/json
   ]
 }
 
-### Upload Profile Picture
+### [AUTHORIZED] Upload Profile Picture
+# Access: Any logged-in user
+# Purpose: Uploads a new profile image file.
 POST {{UserService_HostAddress}}/api/user/profile/picture
 Authorization: Bearer {{AuthToken}}
 Content-Type: multipart/form-data; boundary=WebAppBoundary
@@ -43,14 +48,18 @@ Content-Type: image/jpeg
 < ./profile.jpg
 --WebAppBoundary--
 
-### Get Profile By ID (Admin Only)
+### [ADMIN ONLY] Get Profile By ID
+# Access: Admin role only
+# Purpose: Allows administrators to view any user's profile for moderation.
 # Replace with a real User ID from your database
 @TargetUserId = 00000000-0000-0000-0000-000000000000
 GET {{UserService_HostAddress}}/api/user/{{TargetUserId}}
 Authorization: Bearer {{AuthToken}}
 Accept: application/json
 
-### Delete My Account
+### [AUTHORIZED] Delete My Account
+# Access: Any logged-in user
+# Purpose: Permanently deletes the user's account and profile data.
 DELETE {{UserService_HostAddress}}/api/user/account
 Authorization: Bearer {{AuthToken}}
 Accept: application/json
