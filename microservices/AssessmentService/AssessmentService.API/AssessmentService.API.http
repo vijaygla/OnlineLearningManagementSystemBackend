@@ -1,11 +1,11 @@
-@AssessmentService_HostAddress = http://localhost:8087
+@AssessmentService_HostAddress = http://localhost:8007
 @Gateway_HostAddress = http://localhost:5000
-@AuthToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjlmMmEyMzM2LWI0ZmUtNDJkNS1iYTA2LThiYzkzNGQwNWM0OSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJJbnN0cnVjdG9yIFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJpbnN0cnVjdG9yQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiSW5zdHJ1Y3RvciIsImV4cCI6MTc3NjkzMjM4MCwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.BqzDvAqGn0GntnNxYd8sQks3NSH9P5kjHlrZyGRuXa8
+@AuthToken = your-jwt-token-here
 @quizId = 4b08de8b-8a02-4016-a947-aa3674c75005
 
 ### Create a Quiz
 # Access: Admin or Instructor
-POST {{Gateway_HostAddress}}/api/assessments
+POST {{AssessmentService_HostAddress}}/api/assessments
 Authorization: Bearer {{AuthToken}}
 Content-Type: application/json
 
@@ -18,7 +18,7 @@ Content-Type: application/json
 
 ### Add a Question to Quiz
 # Access: Admin or Instructor
-POST {{Gateway_HostAddress}}/api/assessments/{{quizId}}/questions
+POST {{AssessmentService_HostAddress}}/api/assessments/{{quizId}}/questions
 Authorization: Bearer {{AuthToken}}
 Content-Type: application/json
 
@@ -30,17 +30,17 @@ Content-Type: application/json
 
 ### Get Quizzes for a Course uisng course id
 # Access: Anyone (Authorized)
-GET {{Gateway_HostAddress}}/api/assessments/course/d7826501-3c46-42c3-a3cc-1113960a1532
+GET {{AssessmentService_HostAddress}}/api/assessments/course/d7826501-3c46-42c3-a3cc-1113960a1532
 Authorization: Bearer {{AuthToken}}
 
 ### Get Quiz Questions (Start Quiz)
 # Access: Anyone (Authorized)
-GET {{Gateway_HostAddress}}/api/assessments/{{quizId}}
+GET {{AssessmentService_HostAddress}}/api/assessments/{{quizId}}
 Authorization: Bearer {{AuthToken}}
 
 ### Submit Quiz Answers
 # Access: Student
-POST {{Gateway_HostAddress}}/api/assessments/{{quizId}}/submit
+POST {{AssessmentService_HostAddress}}/api/assessments/{{quizId}}/submit
 Authorization: Bearer {{AuthToken}}
 Content-Type: application/json
 

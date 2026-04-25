@@ -22,7 +22,7 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.SetMinimumLevel(LogLevel.Warning);
 builder.Logging.AddFilter("Microsoft", LogLevel.Warning);
-builder.Logging.AddFilter("MassTransit", LogLevel.Warning);
+builder.Logging.AddFilter("MassTransit", LogLevel.Error);
 builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 // Email Configuration
@@ -83,6 +83,6 @@ app.MapControllers();
 var port = "8010";
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Notification Service is running on port {port}");
-Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
+Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 
 app.Run($"http://0.0.0.0:{port}");

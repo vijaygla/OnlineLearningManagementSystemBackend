@@ -46,7 +46,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer"
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement { { new OpenApiSecurityScheme {
-        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } 
+        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { }
     } });
 });
 
@@ -63,6 +63,6 @@ app.MapControllers();
 var port = "8013";
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Payment Service is running on port {port}");
-Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
+Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 
 app.Run($"http://0.0.0.0:{port}");

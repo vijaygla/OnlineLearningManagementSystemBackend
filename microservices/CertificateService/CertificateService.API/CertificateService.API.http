@@ -1,11 +1,11 @@
-@CertificateService_HostAddress = http://localhost:8088
+@CertificateService_HostAddress = http://localhost:8008
 @Gateway_HostAddress = http://localhost:5000
-@AuthToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjlmMmEyMzM2LWI0ZmUtNDJkNS1iYTA2LThiYzkzNGQwNWM0OSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJJbnN0cnVjdG9yIFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJpbnN0cnVjdG9yQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiSW5zdHJ1Y3RvciIsImV4cCI6MTc3NjkzMjM4MCwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.BqzDvAqGn0GntnNxYd8sQks3NSH9P5kjHlrZyGRuXa8
+@AuthToken = your-jwt-token-here
 @certificateId = 6f3ca087-60ce-4a0f-a2b6-220921bf0ece
 
 ### Issue a Certificate
 # Access: Admin or Instructor
-POST {{Gateway_HostAddress}}/api/certificates/issue
+POST {{CertificateService_HostAddress}}/api/certificates/issue
 Authorization: Bearer {{AuthToken}}
 Content-Type: application/json
 
@@ -16,14 +16,14 @@ Content-Type: application/json
 
 ### Get My Certificates
 # Access: Student
-GET {{Gateway_HostAddress}}/api/certificates/student
+GET {{CertificateService_HostAddress}}/api/certificates/student
 Authorization: Bearer {{AuthToken}}
 
 ### Get Certificate Details
 # Access: Student (Own) or Admin
-GET {{Gateway_HostAddress}}/api/certificates/{{certificateId}}
+GET {{CertificateService_HostAddress}}/api/certificates/{{certificateId}}
 Authorization: Bearer {{AuthToken}}
 
 ### Verify a Certificate
 # Access: Anonymous
-GET {{Gateway_HostAddress}}/api/certificates/verify/CERT-C281484017944BCA
+GET {{CertificateService_HostAddress}}/api/certificates/verify/CERT-C281484017944BCA

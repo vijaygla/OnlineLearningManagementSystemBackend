@@ -1,6 +1,195 @@
-@SearchService.API_HostAddress = http://localhost:5190
+@SearchService_HostAddress = http://localhost:8014
 
-GET {{SearchService.API_HostAddress}}/weatherforecast/
-Accept: application/json
+#admin token only
+@AuthToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjdmMDVmMjJkLWUzYmUtNDEzNy1iMjQwLWFmZmI0ZjRmMjdmOSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJBZG1pbiBVc2VyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImV4cCI6MTc3NzE1OTU2OSwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.fIKvYm-XkhRHUs1kwqpr-mJvFyInQllFuAGSS6JrOz8
 
-###
+### ---------------------------------------------------
+### SEARCH SERVICE API TESTING (FULL DATABASE SYNC)
+### ---------------------------------------------------
+
+### STEP 1: SYNC ALL 11 COURSES
+### Run these to populate Meilisearch with your exact DB data.
+
+# 1. Java Full stack (ID: d782...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "d7826501-3c46-42c3-a3cc-1113960a1532",
+  "title": "Java Full stack",
+  "description": "full stack in java",
+  "categoryName": "Web Development",
+  "instructorName": "Instructor 1",
+  "price": 80.00,
+  "createdAt": "2026-04-20T11:44:52Z"
+}
+
+### 2. Machine Learning version 2.0 (ID: f210...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "f210d04a-a0dd-4e59-aa4e-1a5d94074e05",
+  "title": "Machine Learning version 2.0",
+  "description": "Deep dive into machine learning new version",
+  "categoryName": "Data Science",
+  "instructorName": "Instructor 2",
+  "price": 99.99,
+  "createdAt": "2026-04-21T17:37:52Z"
+}
+
+### 3. Java Programming (ID: 5b6e...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "5b6e13d5-a1e8-416e-8254-2092c7a5fd16",
+  "title": "Java Programming",
+  "description": "Full guide by instructor",
+  "categoryName": "Software Engineering",
+  "instructorName": "Instructor 3",
+  "price": 100.00,
+  "createdAt": "2026-04-20T11:26:15Z"
+}
+
+### 4. Java Programming (ID: fae0...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "fae0e2db-4237-4dc4-9343-426707be22c4",
+  "title": "Java Programming",
+  "description": "Full guide by instructor",
+  "categoryName": "Software Engineering",
+  "instructorName": "Instructor 3",
+  "price": 100.00,
+  "createdAt": "2026-04-20T11:27:12Z"
+}
+
+### 5. Java Programming (ID: 12fc...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "12fce5fb-9fe4-47ac-9a22-5c43e3fbcd5f",
+  "title": "Java Programming",
+  "description": "Full guide by instructor",
+  "categoryName": "Software Engineering",
+  "instructorName": "Instructor 3",
+  "price": 100.00,
+  "createdAt": "2026-04-20T11:27:13Z"
+}
+
+### 6. Deep Learning Course (ID: e9bc...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "e9bc0f22-0205-4d28-9102-c81798459ab2",
+  "title": "Deep Learning Course",
+  "description": "This is deep leaning course by instructor",
+  "categoryName": "AI/ML",
+  "instructorName": "Instructor 2",
+  "price": 49.99,
+  "createdAt": "2026-04-21T18:21:05Z"
+}
+
+### 7. Java Full stack (Duplicate ID/Content check: ba8a...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "ba8a39e1-522b-4031-92dd-e70d32c0e4cb",
+  "title": "Java Full stack",
+  "description": "full stack in java",
+  "categoryName": "Web Development",
+  "instructorName": "Instructor 1",
+  "price": 80.00,
+  "createdAt": "2026-04-20T11:58:39Z"
+}
+
+### 8. Java Programming (ID: e54f...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "e54f5895-00b4-4049-82ee-ed8bc0e299dc",
+  "title": "Java Programming",
+  "description": "Full guide by instructor",
+  "categoryName": "Software Engineering",
+  "instructorName": "Instructor 3",
+  "price": 100.00,
+  "createdAt": "2026-04-20T10:21:22Z"
+}
+
+### 9. Python Programing (ID: 25e8...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "25e855b6-457e-47b1-b851-f8b598118fe9",
+  "title": "Python Programing",
+  "description": "Full guide for competative coding",
+  "categoryName": "Programming",
+  "instructorName": "Instructor 4",
+  "price": 80.00,
+  "createdAt": "2026-04-20T11:36:51Z"
+}
+
+### 10. Machine Learning version 2.0 (ID: f461...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "f4614d2c-776e-473b-97e0-faf80f54fbee",
+  "title": "Machine Learning version 2.0",
+  "description": "Deep dive into machine learning new version",
+  "categoryName": "Data Science",
+  "instructorName": "Instructor 5",
+  "price": 99.99,
+  "createdAt": "2026-04-21T17:59:32Z"
+}
+
+### 11. Java Programming (ID: 73f5...)
+POST {{SearchService_HostAddress}}/api/search/sync
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "id": "73f5273a-e02f-4ba9-ad53-fdff54089222",
+  "title": "Java Programming",
+  "description": "Full guide by instructor",
+  "categoryName": "Software Engineering",
+  "instructorName": "Instructor 3",
+  "price": 100.00,
+  "createdAt": "2026-04-20T11:28:14Z"
+}
+
+
+### STEP 2: TEST KEYWORDS
+### Search for 'Java' (Should return 7 results)
+GET {{SearchService_HostAddress}}/api/search?q=Java
+
+### Search for 'Python' (Should return 1 result)
+GET {{SearchService_HostAddress}}/api/search?q=Python
+
+### Search for 'Machine' (Should return 2 results)
+GET {{SearchService_HostAddress}}/api/search?q=Machine
+
+### Search for 'Deep' (Should return 3 results: ML and Deep Learning)
+GET {{SearchService_HostAddress}}/api/search?q=Deep
+
+
+### STEP 3: DELETE A COURSE
+DELETE {{SearchService_HostAddress}}/api/search/73f5273a-e02f-4ba9-ad53-fdff54089222
+Authorization: Bearer {{AuthToken}}

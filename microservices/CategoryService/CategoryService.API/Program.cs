@@ -39,9 +39,6 @@ var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
              ?? builder.Configuration["Jwt:Key"]
              ?? "THIS_IS_SECRET_KEY_CHANGE_IT_1234567890";
 
-Console.WriteLine($"🔍 Using Connection String: {(string.IsNullOrEmpty(connectionString) ? "MISSING" : "FOUND")}");
-Console.WriteLine($"🔍 Using JWT Key: {(jwtKey == "THIS_IS_SECRET_KEY_CHANGE_IT_1234567890" ? "DEFAULT (WARNING)" : "CUSTOM")}");
-
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "IdentityService";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "IdentityServiceClients";
 
@@ -95,7 +92,6 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<CategoryDbContext>();
     try
     {
-        Console.WriteLine("--- ☁️ Syncing Database (CategoryService)... ---");
         var databaseCreator = dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
         if (databaseCreator != null)
         {
@@ -126,6 +122,6 @@ app.MapControllers();
 var port = "8002";
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Category Service is running on port {port}");
-Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
+Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 
 app.Run($"http://0.0.0.0:{port}");

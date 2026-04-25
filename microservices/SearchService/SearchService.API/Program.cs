@@ -2,6 +2,19 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SearchService.Application.Interfaces;
+using SearchService.Infrastructure.Services;
+
+// --- Custom .env Loader ---
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
+if (File.Exists(envPath))
+{
+    foreach (var line in File.ReadAllLines(envPath))
+    {
+        var parts = line.Split('=', 2);
+        if (parts.Length == 2) Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim().Trim('"'));
+    }
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +26,15 @@ builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
-var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET") ?? "THIS_IS_SECRET_KEY_CHANGE_IT_1234567890";
-var jwtIssuer = "IdentityService";
-var jwtAudience = "IdentityServiceClients";
+// Dependency Injection
+builder.Services.AddScoped<ISearchService, MeiliSearchService>();
+
+var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET") 
+             ?? builder.Configuration["Jwt:Key"] 
+             ?? "THIS_IS_SECRET_KEY_CHANGE_IT_1234567890";
+
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "IdentityService";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "IdentityServiceClients";
 
 var key = Encoding.UTF8.GetBytes(jwtKey);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -46,7 +65,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer"
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement { { new OpenApiSecurityScheme {
-        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } 
+        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { }
     } });
 });
 
@@ -63,6 +82,6 @@ app.MapControllers();
 var port = "8014";
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Search Service is running on port {port}");
-Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
+Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 
 app.Run($"http://0.0.0.0:{port}");

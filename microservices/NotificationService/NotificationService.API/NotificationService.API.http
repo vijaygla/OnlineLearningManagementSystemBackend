@@ -1,4 +1,4 @@
-@NotificationService_HostAddress = http://localhost:8090
+@NotificationService_HostAddress = http://localhost:8010
 
 ### Health Check
 GET {{NotificationService_HostAddress}}/health

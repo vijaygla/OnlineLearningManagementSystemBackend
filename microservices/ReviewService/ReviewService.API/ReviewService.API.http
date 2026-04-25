@@ -1,12 +1,12 @@
-@ReviewService_HostAddress = http://localhost:8089
+@ReviewService_HostAddress = http://localhost:8009
 @Gateway_HostAddress = http://localhost:5000
-@AuthToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjVmOThiMWU3LTZmMDMtNDJjZC1iN2YxLWU0Y2U5YjNhNzQ2YiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJTdHVkZW50IFVzZXIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJzdHVkZW50QGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiU3R1ZGVudCIsImV4cCI6MTc3Njk0MjI3MCwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.cqEY0JflzFgo_8OstvC02Vgazke9FmCzh6tSLzTm3Fs
+@AuthToken = your-jwt-token-here
 @courseId = d7826501-3c46-42c3-a3cc-1113960a1532
 @reviewId = 4240e847-8153-4132-a32d-7c61973173fd
 
 ### Create a Review
 # Access: Student (Enrolled)
-POST {{Gateway_HostAddress}}/api/reviews
+POST {{ReviewService_HostAddress}}/api/reviews
 Authorization: Bearer {{AuthToken}}
 Content-Type: application/json
 
@@ -18,7 +18,7 @@ Content-Type: application/json
 
 ### Update a Review
 # Access: Student (Owner)
-PUT {{Gateway_HostAddress}}/api/reviews/{{reviewId}}
+PUT {{ReviewService_HostAddress}}/api/reviews/{{reviewId}}
 Authorization: Bearer {{AuthToken}}
 Content-Type: application/json
 
@@ -29,13 +29,13 @@ Content-Type: application/json
 
 ### Delete a Review
 # Access: Student (Owner) or Admin
-DELETE {{Gateway_HostAddress}}/api/reviews/{{reviewId}}
+DELETE {{ReviewService_HostAddress}}/api/reviews/{{reviewId}}
 Authorization: Bearer {{AuthToken}}
 
 ### Get Course Reviews
 # Access: Public
-GET {{Gateway_HostAddress}}/api/reviews/course/{{courseId}}
+GET {{ReviewService_HostAddress}}/api/reviews/course/{{courseId}}
 
 ### Get Course Average Rating
 # Access: Public
-GET {{Gateway_HostAddress}}/api/reviews/course/{{courseId}}/rating
+GET {{ReviewService_HostAddress}}/api/reviews/course/{{courseId}}/rating

@@ -150,29 +150,6 @@ dotnet run --project microservices/ContentService/ContentService.API/ContentServ
 dotnet run --project gateway/ApiGateway/ApiGateway.csproj
 ```
 
-### Default local HTTP ports
-
-- `ApiGateway`: `http://localhost:5031`
-- `IdentityService`: `http://127.0.0.1:8081`
-- `CategoryService`: `http://127.0.0.1:8082`
-- `CourseService`: `http://127.0.0.1:8083`
-- `ContentService`: `http://127.0.0.1:8084`
-
-### Swagger
-
-Most API projects expose Swagger in development. After starting a service, open:
-
-```text
-http://<host>:<port>/swagger
-```
-
-Examples:
-
-- `http://127.0.0.1:8081/swagger`
-- `http://127.0.0.1:8082/swagger`
-- `http://127.0.0.1:8083/swagger`
-- `http://127.0.0.1:8084/swagger`
-
 ## Running with Docker
 
 The repository includes Docker support under the `docker/` folder.
@@ -276,8 +253,8 @@ dotnet add package Swashbuckle.AspNetCore
 
 ## Microservices Connectivity & Swagger Map
 
-| Service Name | Gateway Route | Ext. Port (PC) |
-| --- | --- | ---: |
+| Service Name | Gateway Route | Ext. Port (PC) | Int. Port (Docker) |
+| --- | --- | ---: | ---: |
 | API Gateway | `/` | 5000 | 8000 |
 | Identity | `/api/auth` | 5001 | 8001 |
 | Category | `/api/categories` | 5002 | 8002 |
@@ -294,6 +271,30 @@ dotnet add package Swashbuckle.AspNetCore
 | Payment | `/api/payment` | 5013 | 8013 |
 | Search | `/api/search` | 5014 | 8014 |
 | Discussion | `/api/discussion` | 5015 | 8015 |
+
+---
+
+## Swagger URL
+
+| Service | Swagger URL |
+| --- | --- |
+| Identity | [http://localhost:8001/swagger](http://localhost:8001/swagger) |
+| Category | [http://localhost:8002/swagger](http://localhost:8002/swagger) |
+| Course | [http://localhost:8003/swagger](http://localhost:8003/swagger) |
+| Content | [http://localhost:8004/swagger](http://localhost:8004/swagger) |
+| Enrollment | [http://localhost:8005/swagger](http://localhost:8005/swagger) |
+| Progress | [http://localhost:8006/swagger](http://localhost:8006/swagger) |
+| Assessment | [http://localhost:8007/swagger](http://localhost:8007/swagger) |
+| Certificate | [http://localhost:8008/swagger](http://localhost:8008/swagger) |
+| Review | [http://localhost:8009/swagger](http://localhost:8009/swagger) |
+| Notification | [http://localhost:8010/swagger](http://localhost:8010/swagger) |
+| User | [http://localhost:8011/swagger](http://localhost:8011/swagger) |
+| Media | [http://localhost:8012/swagger](http://localhost:8012/swagger) |
+| Payment | [http://localhost:8013/swagger](http://localhost:8013/swagger) |
+| Search | [http://localhost:8014/swagger](http://localhost:8014/swagger) |
+| Discussion | [http://localhost:8015/swagger](http://localhost:8015/swagger) |
+
+---
 
 ## Architecture Summary
 

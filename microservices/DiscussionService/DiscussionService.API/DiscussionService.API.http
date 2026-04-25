@@ -1,2 +1,10 @@
-@DiscussionService.API_HostAddress = http://localhost:
+@DiscussionService_HostAddress = http://localhost:8015
+@AuthToken = your-jwt-token-here
 
+### ---------------------------------------------------
+### DISCUSSION SERVICE API TESTING
+### ---------------------------------------------------
+
+### Health Check
+GET {{DiscussionService_HostAddress}}/
+Accept: application/json

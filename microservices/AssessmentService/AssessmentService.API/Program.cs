@@ -28,23 +28,23 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.SetMinimumLevel(LogLevel.Warning);
 builder.Logging.AddFilter("Microsoft", LogLevel.Warning);
-builder.Logging.AddFilter("MassTransit", LogLevel.Warning);
+builder.Logging.AddFilter("MassTransit", LogLevel.Error);
 builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
-var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION") 
+var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION")
                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
-var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET") 
-             ?? builder.Configuration["Jwt:Key"] 
+var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
+             ?? builder.Configuration["Jwt:Key"]
              ?? "THIS_IS_SECRET_KEY_CHANGE_IT_1234567890";
 
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "IdentityService";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "IdentityServiceClients";
 
 builder.Services.AddDbContext<AssessmentDbContext>(options =>
-    options.UseSqlServer(connectionString, sqlOptions => 
+    options.UseSqlServer(connectionString, sqlOptions =>
     {
         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
         sqlOptions.CommandTimeout(60);
@@ -82,7 +82,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer"
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement { { new OpenApiSecurityScheme {
-        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { } 
+        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, new string[] { }
     } });
 });
 
@@ -91,7 +91,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AssessmentDbContext>();
-    try 
+    try
     {
         var databaseCreator = dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
         if (databaseCreator != null)
@@ -115,6 +115,6 @@ app.MapControllers();
 var port = "8007";
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Assessment Service is running on port {port}");
-Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
+Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 
 app.Run($"http://0.0.0.0:{port}");

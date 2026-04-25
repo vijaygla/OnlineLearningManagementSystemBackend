@@ -1,6 +1,10 @@
-@PaymentService.API_HostAddress = http://localhost:5268
+@PaymentService_HostAddress = http://localhost:8013
+@AuthToken = your-jwt-token-here
 
-GET {{PaymentService.API_HostAddress}}/weatherforecast/
+### ---------------------------------------------------
+### PAYMENT SERVICE API TESTING
+### ---------------------------------------------------
+
+### Health Check
+GET {{PaymentService_HostAddress}}/
 Accept: application/json
-
-###
