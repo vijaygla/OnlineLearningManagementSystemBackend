@@ -112,8 +112,8 @@ app.UseAuthorization();
 app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
-var port = "8088";
+var port = "8008";
 Console.WriteLine($"🚀 Certificate Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
 
-app.Run();
+app.Run($"http://0.0.0.0:{port}");

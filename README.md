@@ -84,14 +84,14 @@ The solution uses a service-per-domain layout so features can evolve independent
 ## Notification System Architecture
 The project uses an asynchronous, event-driven architecture to handle system-wide notifications without blocking core business logic.
 
-### 🛠 Technologies & Dependencies:
+### Technologies & Dependencies:
 - **MassTransit.RabbitMQ**: Distributed application framework used to manage message bus communication.
 - **RabbitMQ**: The message broker that handles the queuing and delivery of events.
 - **MailKit & MimeKit**: Robust libraries used for formatting and sending HTML emails via SMTP.
 - **Swashbuckle.AspNetCore**: Provides Swagger UI and API documentation for service monitoring.
 - **Mailhog**: A developer tool that acts as a local SMTP server and web-based email inbox for testing.
 
-### 🔄 Event Flow (Step-by-Step):
+### Event Flow (Step-by-Step):
 1.  **Trigger**: A domain event occurs in a microservice (e.g., `EnrollmentService` completes a new student enrollment).
 2.  **Publish**: The source service publishes a `Shared.Contracts.Events.EnrollmentCreatedEvent` to the RabbitMQ exchange.
 3.  **Transport**: RabbitMQ routes the message to the `enrollment-created-queue` based on configured bindings.
@@ -100,7 +100,7 @@ The project uses an asynchronous, event-driven architecture to handle system-wid
 6.  **Delivery**: The `EmailService` connects to the SMTP server (Mailhog in dev) and delivers the message.
 7.  **Verification**: The process is logged for monitoring, and the message is acknowledged in the queue upon successful delivery.
 
-### 🚀 Monitoring & Local Setup:
+### Monitoring & Local Setup:
 - **Health Check**: Verify the service status at `http://localhost:8090/health`.
 - **RabbitMQ Management**: Monitor queues at [http://localhost:15672](http://localhost:15672) (guest/guest).
 - **Mailhog Inbox**: View sent emails at [http://localhost:8025](http://localhost:8025).
@@ -263,25 +263,64 @@ dotnet add package Swashbuckle.AspNetCore
 3. Use environment-specific local config files.
 4. Test the affected service before opening a pull request.
 
-## License
 
-This project currently has no license file defined in the repository. Add one if you plan to make the project public on GitHub.
+## API Gateway & Infrastructure
 
+| Service / Tool | External Port | Internal Port | URL / Dashboard |
+| --- | ---: | ---: | --- |
+| RabbitMQ | 15672 | 15672 | [Dashboard](http://localhost:15672) (guest/guest) |
+| MinIO Storage | 9001 | 9001 | [Console](http://localhost:9001) (minioadmin/minioadmin) |
+| MailHog | 8025 | 8025 | [Email Inbox](http://localhost:8025) |
 
-# Microservices and thier port
-✅ Database connected successfully!
-🚀 [Service Name] is running on port [Port]
-📖 Swagger UI: http://127.0.0.1:[Port]/swagger
-  The microservices and their ports are:
-   - IdentityService: 8081
-   - CategoryService: 8082
-   - CourseService: 8083
-   - ContentService: 8084
-   - EnrollmentService: 8085
-   - AssessmentService: 8087
-   - CertificateService: 8088
-   - ReviewService: 8089
-   - NotificationService: 8090
 ---
 
-## 
+## Microservices Connectivity & Swagger Map
+
+| Service Name | Gateway Route | Ext. Port (PC) |
+| --- | --- | ---: |
+| API Gateway | `/` | 5000 | 8000 |
+| Identity | `/api/auth` | 5001 | 8001 |
+| Category | `/api/categories` | 5002 | 8002 |
+| Course | `/api/courses` | 5003 | 8003 |
+| Content | `/api/lessons` | 5004 | 8004 |
+| Enrollment | `/api/enrollment` | 5005 | 8005 |
+| Progress | `/api/progress` | 5006 | 8006 |
+| Assessment | `/api/assessment` | 5007 | 8007 |
+| Certificate | `/api/certificate` | 5008 | 8008 |
+| Review | `/api/review` | 5009 | 8009 |
+| Notification | `/api/notification` | 5010 | 8010 |
+| User | `/api/user` | 5011 | 8011 |
+| Media | `/api/media` | 5012 | 8012 |
+| Payment | `/api/payment` | 5013 | 8013 |
+| Search | `/api/search` | 5014 | 8014 |
+| Discussion | `/api/discussion` | 5015 | 8015 |
+
+## Architecture Summary
+
+Here is a summary of the project architecture and what I understand:
+
+- Architecture: A modular, microservices-oriented backend built with .NET 10 and ASP.NET Core Web API.
+- Gateway: Central entry point routed via YARP (ApiGateway).
+- Microservices: 12 distinct domain services (Identity, Category, Course, Content, Enrollment, Progress, Assessment, Review, Notification, Certificate, Media, and User).
+- Additional routed services shown in the gateway map include Payment, Search, and Discussion.
+- Design Pattern: Each microservice strictly adheres to Clean Architecture patterns, split into:
+  - API (Controllers, Program setup)
+  - Application (Business logic, DTOs, Interfaces, Services)
+  - Domain (Entities, core domain logic)
+  - Infrastructure (Entity Framework Core Data context, Repositories)
+- Shared Context: A SharedKernel project is used to house shared Base classes, Common utilities, Contracts (for messaging), Enums, Interfaces, and ValueObjects.
+- Event-Driven Messaging: The architecture employs MassTransit and RabbitMQ for asynchronous system-wide events (e.g., triggering email notifications via NotificationService when enrollments happen).
+- Deployment: Local and containerized development setups using Docker Compose with predefined routing and port configurations.
+
+## Docker Command
+
+| Task | Command |
+| --- | --- |
+| Start everything (First time) | `docker-compose up -d --build` |
+| Start after code changes | `docker-compose up -d --build --force-recreate` |
+| Stop everything | `docker-compose down` |
+| Check service status | `docker-compose ps` |
+| View Media Service logs | `docker-compose logs -f mediaservice` |
+| Remove all data (Clean slate) | `docker-compose down -v` (Caution: Deletes DB & Files) |
+
+---

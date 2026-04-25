@@ -13,7 +13,7 @@ app.MapGet("/", () => "Online Learning Management System API Gateway is running!
 // Map the reverse proxy middleware
 app.MapReverseProxy();
 
-var port = 5000;
+var port = 8000;
 Console.WriteLine($"🚀 API Gateway is running on port {port}");
 
 // Dynamic display of routes based on configuration
@@ -25,4 +25,4 @@ foreach (var cluster in proxyConfig.GetChildren())
     Console.WriteLine($"  - {cluster.Key}: {address}");
 }
 
-app.Run();
+app.Run($"http://0.0.0.0:{port}");

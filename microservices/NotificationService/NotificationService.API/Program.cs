@@ -80,9 +80,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-var port = "8090";
+var port = "8010";
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Notification Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
 
-app.Run($"http://127.0.0.1:{port}");
+app.Run($"http://0.0.0.0:{port}");

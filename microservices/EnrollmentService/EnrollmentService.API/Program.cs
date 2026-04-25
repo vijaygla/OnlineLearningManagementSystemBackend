@@ -127,9 +127,9 @@ app.UseAuthorization();
 app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
-var port = "8085";
+var port = "8005";
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Enrollment Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://127.0.0.1:{port}/swagger");
 
-app.Run($"http://127.0.0.1:{port}");
+app.Run($"http://0.0.0.0:{port}");

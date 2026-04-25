@@ -27,6 +27,12 @@
     <Project Path="microservices/ContentService/ContentService.Domain/ContentService.Domain.csproj" />
     <Project Path="microservices/ContentService/ContentService.Infrastructure/ContentService.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/microservices/DiscussionService/">
+    <Project Path="microservices/DiscussionService/DiscussionService.API/DiscussionService.API.csproj" />
+    <Project Path="microservices/DiscussionService/DiscussionService.Application/DiscussionService.Application.csproj" />
+    <Project Path="microservices/DiscussionService/DiscussionService.Domain/DiscussionService.Domain.csproj" />
+    <Project Path="microservices/DiscussionService/DiscussionService.Infrastructure/DiscussionService.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/microservices/CourseService/">
     <Project Path="microservices/CourseService/CourseService.API/CourseService.API.csproj" />
     <Project Path="microservices/CourseService/CourseService.Application/CourseService.Application.csproj" />
@@ -57,6 +63,12 @@
     <Project Path="microservices/NotificationService/NotificationService.Domain/NotificationService.Domain.csproj" />
     <Project Path="microservices/NotificationService/NotificationService.Infrastructure/NotificationService.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/microservices/PaymentService/">
+    <Project Path="microservices/PaymentService/PaymentService.API/PaymentService.API.csproj" />
+    <Project Path="microservices/PaymentService/PaymentService.Application/PaymentService.Application.csproj" />
+    <Project Path="microservices/PaymentService/PaymentService.Domain/PaymentService.Domain.csproj" />
+    <Project Path="microservices/PaymentService/PaymentService.Infrastructure/PaymentService.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/microservices/ProgressService/">
     <Project Path="microservices/ProgressService/ProgressService.API/ProgressService.API.csproj" />
     <Project Path="microservices/ProgressService/ProgressService.Application/ProgressService.Application.csproj" />
@@ -68,6 +80,12 @@
     <Project Path="microservices/ReviewService/ReviewService.Application/ReviewService.Application.csproj" />
     <Project Path="microservices/ReviewService/ReviewService.Domain/ReviewService.Domain.csproj" />
     <Project Path="microservices/ReviewService/ReviewService.Infrastructure/ReviewService.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/microservices/SearchService/">
+    <Project Path="microservices/SearchService/SearchService.API/SearchService.API.csproj" />
+    <Project Path="microservices/SearchService/SearchService.Application/SearchService.Application.csproj" />
+    <Project Path="microservices/SearchService/SearchService.Domain/SearchService.Domain.csproj" />
+    <Project Path="microservices/SearchService/SearchService.Infrastructure/SearchService.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/microservices/UserService/">
     <Project Path="microservices/UserService/UserService.API/UserService.API.csproj" />

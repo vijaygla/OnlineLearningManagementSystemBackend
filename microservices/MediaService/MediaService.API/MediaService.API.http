@@ -1,6 +1,45 @@
-@MediaService.API_HostAddress = http://localhost:5138
+@MediaService_HostAddress = http://localhost:8012
+@AuthToken = your-jwt-token-here
 
-GET {{MediaService.API_HostAddress}}/weatherforecast/
+### ---------------------------------------------------
+### MEDIA SERVICE API TESTING
+### ---------------------------------------------------
+
+### 1. Upload a file
+### Roles allowed: Admin, Instructor, Student
+### Note: Requires Bearer Token
+POST {{MediaService_HostAddress}}/api/media/upload
+Authorization: Bearer {{AuthToken}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="test_lesson.mp4"
+Content-Type: video/mp4
+
+< ./test-video.mp4
+--WebAppBoundary--
+
+
+### 2. Get media by ID
+### Roles allowed: Any Authorized User
+### Replace {id} with an actual ID from the upload response
+@mediaId = your-guid-here
+GET {{MediaService_HostAddress}}/api/media/{{mediaId}}
+Authorization: Bearer {{AuthToken}}
 Accept: application/json
 
-###
+
+### 3. Delete media
+### Roles allowed: 
+### - Admin: Can delete any file.
+### - Instructor/Student: Can only delete files they uploaded.
+DELETE {{MediaService_HostAddress}}/api/media/{{mediaId}}
+Authorization: Bearer {{AuthToken}}
+
+
+### ---------------------------------------------------
+### ROLE PERMISSIONS SUMMARY:
+### - Admin: full access (Upload, View, Delete All)
+### - Instructor: Upload course media, delete own media
+### - Student: Upload profile picture, delete own profile picture
+### ---------------------------------------------------
