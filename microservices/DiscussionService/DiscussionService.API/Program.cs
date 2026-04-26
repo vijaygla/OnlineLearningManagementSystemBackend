@@ -1,21 +1,70 @@
 using System.Text;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using DiscussionService.Application.Interfaces;
+using DiscussionService.Application.Services;
+using DiscussionService.Infrastructure.Data;
+using DiscussionService.Infrastructure.Repositories;
+
+// --- Custom .env Loader (Fix: Needs 3 levels to reach root) ---
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
+if (File.Exists(envPath))
+{
+    foreach (var line in File.ReadAllLines(envPath))
+    {
+        var parts = line.Split('=', 2);
+        if (parts.Length == 2) Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim().Trim('"'));
+    }
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Clean Logging Configuration ---
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
-builder.Logging.SetMinimumLevel(LogLevel.Warning);
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+builder.Logging.AddFilter("Microsoft", LogLevel.Critical);
+builder.Logging.AddFilter("MassTransit", LogLevel.Critical);
 builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
-var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET") ?? "THIS_IS_SECRET_KEY_CHANGE_IT_1234567890";
-var jwtIssuer = "IdentityService";
-var jwtAudience = "IdentityServiceClients";
+var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION")
+                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Database
+builder.Services.AddDbContext<DiscussionDbContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// Dependency Injection
+builder.Services.AddScoped<IDiscussionRepository, DiscussionRepository>();
+builder.Services.AddScoped<IDiscussionService, DiscussionService.Application.Services.DiscussionService>();
+
+// MassTransit
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var rabbitHost = Environment.GetEnvironmentVariable("RabbitMQ__Host") ?? "localhost";
+        cfg.Host(rabbitHost, "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+    });
+});
+
+// Authentication
+var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
+             ?? builder.Configuration["Jwt:Key"]
+             ?? "THIS_IS_SECRET_KEY_CHANGE_IT_1234567890";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "IdentityService";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "IdentityServiceClients";
 
 var key = Encoding.UTF8.GetBytes(jwtKey);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -51,6 +100,23 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+// --- Database Auto-Sync Logic ---
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<DiscussionDbContext>();
+    try
+    {
+        var databaseCreator = dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
+        if (databaseCreator != null)
+        {
+            if (!databaseCreator.Exists()) databaseCreator.Create();
+            try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Threads"); }
+            catch { databaseCreator.CreateTables(); }
+        }
+    }
+    catch (Exception ex) { Console.WriteLine($"⚠️ Sync notice: {ex.Message}"); }
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Discussion Service API v1"); options.RoutePrefix = "swagger"; });

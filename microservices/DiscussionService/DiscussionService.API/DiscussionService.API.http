@@ -1,10 +1,47 @@
 @DiscussionService_HostAddress = http://localhost:8015
-@AuthToken = your-jwt-token-here
+@AuthToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImZkYTg4MTZhLTFlNWQtNGQ2ZC1iYmZjLWE1MGMwMjM4OTdhZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJTdHVkZW50MSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InN0dWRlbnQxQGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlN0dWRlbnQiLCJleHAiOjE3NzcyMTkyMTUsImlzcyI6IklkZW50aXR5U2VydmljZSIsImF1ZCI6IklkZW50aXR5U2VydmljZUNsaWVudHMifQ.VYxDuPK2Tdb7BbbwVLAV7LOcLSI_eOcoIDtnR_BhZus
+@CourseId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
+@ThreadId = 5ea12d89-19de-4a7a-b98b-344aeb14bfc3
 
-### ---------------------------------------------------
-### DISCUSSION SERVICE API TESTING
-### ---------------------------------------------------
+### 1. Get Course Threads
+# Role: Public / Authenticated (Any User)
+# Purpose: Lists all discussion threads for a specific course.
+GET {{DiscussionService_HostAddress}}/api/threads/course/{{CourseId}}
 
-### Health Check
-GET {{DiscussionService_HostAddress}}/
-Accept: application/json
+### 2. Get Thread Details
+# Role: Public / Authenticated (Any User)
+# Purpose: Gets a specific thread with all its comments and nested replies.
+GET {{DiscussionService_HostAddress}}/api/threads/{{ThreadId}}
+
+### 3. Create a New Thread
+# Role: Authenticated (Student / Instructor)
+# Purpose: Starts a new discussion topic in a course.
+POST {{DiscussionService_HostAddress}}/api/threads
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+    "title": "Need help with EF Core Migrations",
+    "content": "I am getting an error while running dotnet ef database update. Any ideas?",
+    "courseId": "{{CourseId}}",
+    "lessonId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+
+### 4. Add a Comment
+# Role: Authenticated (Student / Instructor)
+# Purpose: Replies to a thread or another comment.
+POST {{DiscussionService_HostAddress}}/api/threads/comments
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+    "threadId": "{{ThreadId}}",
+    "content": "this is commnet message",
+    "parentCommentId": null
+}
+
+### 5. Delete a Thread
+# Role: Authenticated (Author / Instructor / Admin)
+# Purpose: Removes a thread (Moderation).
+DELETE {{DiscussionService_HostAddress}}/api/threads/{{ThreadId}}
+Authorization: Bearer {{AuthToken}}

@@ -2,6 +2,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DiscussionService.Domain\DiscussionService.Domain.csproj" />
+    <ProjectReference Include="..\..\..\shared\SharedKernel\SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.2.5" />
   </ItemGroup>
 
   <PropertyGroup>
