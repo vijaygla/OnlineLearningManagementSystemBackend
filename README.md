@@ -325,3 +325,11 @@ Here is a summary of the project architecture and what I understand:
 | Remove all data (Clean slate) | `docker-compose down -v` (Caution: Deletes DB & Files) |
 
 ---
+# Summary of the Flow
+   1. User clicks "Buy Course".
+   2. ApiGateway routes request to PaymentService.
+   3. PaymentService asks Stripe for a PaymentIntent.
+   4. User enters card info on the frontend (securely sent to Stripe, not you).
+   5. Stripe processes the money and pings your Webhook.
+   6. PaymentService updates the DB and shouts "Payment Done!" via RabbitMQ.
+   7. EnrollmentService hears the shout and adds the user to the course.

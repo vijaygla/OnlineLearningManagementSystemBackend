@@ -80,7 +80,6 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8014";
-Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Search Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

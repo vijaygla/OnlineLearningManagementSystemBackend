@@ -81,7 +81,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 var port = "8010";
-Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Notification Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 
