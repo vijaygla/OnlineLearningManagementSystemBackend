@@ -33,7 +33,7 @@ Stripe-Signature: t=123,v1=abc
   "data": {
     "object": {
       "id": "pi_test",
-      "amount": 49.99,
+      "amount": 9999,
       "currency": "usd"
     }
   }

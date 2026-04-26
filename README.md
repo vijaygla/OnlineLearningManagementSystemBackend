@@ -1,18 +1,36 @@
 # Online Learning Management System Backend
 
-A modular backend for an online learning platform built with ASP.NET Core and a microservices-oriented structure. The repository includes an API Gateway, multiple domain-focused services, shared building blocks, and Docker support for containerized development.
+A modular backend for an online learning platform built with .NET 10, ASP.NET Core Web API, YARP, Entity Framework Core, RabbitMQ, and Docker Compose.
+
+The solution follows a microservices-oriented structure: each domain service owns its API, application logic, domain model, and infrastructure, while shared contracts and common building blocks live under `shared/`.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Repository Structure](#repository-structure)
+- [Architecture](#architecture)
+- [Service Map](#service-map)
+- [Infrastructure Map](#infrastructure-map)
+- [Configuration](#configuration)
+- [Run Locally](#run-locally)
+- [Run with Docker](#run-with-docker)
+- [Entity Framework Core](#entity-framework-core)
+- [Event-Driven Flows](#event-driven-flows)
+- [Development Notes](#development-notes)
 
 ## Overview
 
-This backend is designed to support the core workflows of a learning management system, including:
+This backend supports the main workflows of an online learning management system:
 
-- Authentication and authorization with JWT
-- Course category management
-- Course creation and approval workflows
-- Lesson and content management
-- Enrollment, progress tracking, assessments, reviews, certificates, notifications, and media services
-
-The solution uses a service-per-domain layout so features can evolve independently while still sharing common contracts, utilities, and kernel abstractions.
+- Authentication, authorization, roles, and JWT token generation
+- Course categories, courses, content, and lesson metadata
+- Enrollment, learner progress, assessments, reviews, certificates, and user profiles
+- Media uploads through MinIO-compatible object storage
+- Course search through Meilisearch
+- Notifications through RabbitMQ, MassTransit, SMTP, and MailHog
+- Payments through Stripe PaymentIntents and webhook handling
+- Discussion threads and comments
 
 ## Tech Stack
 
@@ -20,7 +38,12 @@ The solution uses a service-per-domain layout so features can evolve independent
 - ASP.NET Core Web API
 - YARP Reverse Proxy
 - Entity Framework Core
-- Azure SQL
+- Azure SQL / SQL Server
+- RabbitMQ and MassTransit
+- Stripe.net
+- MinIO
+- Meilisearch
+- MailKit, MimeKit, and MailHog
 - Docker Compose
 - Swagger / OpenAPI
 - JWT Bearer Authentication
@@ -32,304 +55,264 @@ The solution uses a service-per-domain layout so features can evolve independent
 |-- gateway/
 |   `-- ApiGateway/
 |-- microservices/
-|   |-- IdentityService/
-|   |-- CategoryService/
-|   |-- CourseService/
-|   |-- ContentService/
-|   |-- EnrollmentService/
-|   |-- ProgressService/
 |   |-- AssessmentService/
-|   |-- ReviewService/
-|   |-- NotificationService/
+|   |-- CategoryService/
 |   |-- CertificateService/
+|   |-- ContentService/
+|   |-- CourseService/
+|   |-- DiscussionService/
+|   |-- EnrollmentService/
+|   |-- IdentityService/
 |   |-- MediaService/
+|   |-- NotificationService/
+|   |-- PaymentService/
+|   |-- ProgressService/
+|   |-- ReviewService/
+|   |-- SearchService/
 |   `-- UserService/
 |-- shared/
-|   |-- Common/
-|   |-- Contracts/
 |   `-- SharedKernel/
-`-- docker/
+|-- docker/
+|   |-- docker-compose.yml
+|   |-- gateway/
+|   `-- services/
+`-- OnlineLearningManagementSystemBackend.slnx
 ```
 
-## Services
+## Architecture
 
-### Core services currently wired for active development
+### Gateway
 
-- `IdentityService`  
-  Handles registration, login, role-based access, and JWT token generation.
+`gateway/ApiGateway` is the public entry point. It uses YARP to route incoming requests to the correct backend service.
 
-- `CategoryService`  
-  Manages course categories.
+Gateway root:
 
-- `CourseService`  
-  Supports course creation and course approval workflows.
+```text
+http://localhost:5000
+```
 
-- `ContentService`  
-  Manages lessons and learning content metadata.
+### Microservice Layout
 
-- `ApiGateway`  
-  Entry point for routing requests through YARP reverse proxy.
+Most services follow this Clean Architecture style:
 
-### Additional services present in the repo
+```text
+ServiceName/
+|-- ServiceName.API/             # Controllers, Program setup, Swagger, auth setup
+|-- ServiceName.Application/     # DTOs, interfaces, business services, consumers
+|-- ServiceName.Domain/          # Entities, enums, domain rules
+`-- ServiceName.Infrastructure/  # EF Core DbContext, repositories, external integrations
+```
 
-- `EnrollmentService`
-- `ProgressService`
-- `AssessmentService`
-- `ReviewService`
-- `NotificationService`
-- `CertificateService`
-- `MediaService`
-- `UserService`
+### Shared Kernel
 
-## Notification System Architecture
-The project uses an asynchronous, event-driven architecture to handle system-wide notifications without blocking core business logic.
+`shared/SharedKernel` contains reusable pieces shared across services:
 
-### Technologies & Dependencies:
-- **MassTransit.RabbitMQ**: Distributed application framework used to manage message bus communication.
-- **RabbitMQ**: The message broker that handles the queuing and delivery of events.
-- **MailKit & MimeKit**: Robust libraries used for formatting and sending HTML emails via SMTP.
-- **Swashbuckle.AspNetCore**: Provides Swagger UI and API documentation for service monitoring.
-- **Mailhog**: A developer tool that acts as a local SMTP server and web-based email inbox for testing.
+- Base entities and auditable entities
+- Common wrappers such as `ApiResponse` and `PagedResponse`
+- Shared exceptions, middleware, helpers, and extensions
+- Shared contracts and integration events
+- Common constants, enums, interfaces, and value objects
 
-### Event Flow (Step-by-Step):
-1.  **Trigger**: A domain event occurs in a microservice (e.g., `EnrollmentService` completes a new student enrollment).
-2.  **Publish**: The source service publishes a `Shared.Contracts.Events.EnrollmentCreatedEvent` to the RabbitMQ exchange.
-3.  **Transport**: RabbitMQ routes the message to the `enrollment-created-queue` based on configured bindings.
-4.  **Consume**: The `NotificationService` (running as a background consumer) detects the message and triggers the `EnrollmentCreatedConsumer`.
-5.  **Process**: The consumer extracts student details and course information, then constructs a personalized HTML email.
-6.  **Delivery**: The `EmailService` connects to the SMTP server (Mailhog in dev) and delivers the message.
-7.  **Verification**: The process is logged for monitoring, and the message is acknowledged in the queue upon successful delivery.
+### Messaging
 
-### Monitoring & Local Setup:
-- **Health Check**: Verify the service status at `http://localhost:8090/health`.
-- **RabbitMQ Management**: Monitor queues at [http://localhost:15672](http://localhost:15672) (guest/guest).
-- **Mailhog Inbox**: View sent emails at [http://localhost:8025](http://localhost:8025).
-- **Service Port**: Locally runs on `8090` to avoid conflicts with other services.
+Services publish and consume integration events through MassTransit and RabbitMQ. Shared event contracts are stored in:
 
-## Prerequisites
+```text
+shared/SharedKernel/Contracts/Events/
+```
 
-Before running the project, make sure you have:
+Current shared events include:
 
-- .NET 10 SDK installed
-- Docker Desktop installed
-- Access to an Azure SQL database
-- A valid connection string and JWT secret configured locally
+- `UserCreatedEvent`
+- `UserDeletedEvent`
+- `EnrollmentCreatedEvent`
+- `ProgressUpdatedEvent`
+- `CourseApprovedEvent`
+- `PaymentCompletedEvent`
+
+## Service Map
+
+| Service | Responsibility | Gateway Route | External Port | Internal Port | Swagger |
+| --- | --- | --- | ---: | ---: | --- |
+| API Gateway | Public routing entry point | `/` | 5000 | 8000 | N/A |
+| Identity | Registration, login, roles, JWT | `/api/auth` | 5001 | 8001 | [Swagger](http://localhost:5001/swagger) |
+| Category | Course categories | `/api/categories` | 5002 | 8002 | [Swagger](http://localhost:5002/swagger) |
+| Course | Course creation and approval | `/api/courses` | 5003 | 8003 | [Swagger](http://localhost:5003/swagger) |
+| Content | Lessons and learning content | `/api/lessons` | 5004 | 8004 | [Swagger](http://localhost:5004/swagger) |
+| Enrollment | Course enrollments | `/api/enrollments`, `/api/enrollment` | 5005 | 8005 | [Swagger](http://localhost:5005/swagger) |
+| Progress | Learner progress tracking | `/api/progress` | 5006 | 8006 | [Swagger](http://localhost:5006/swagger) |
+| Assessment | Quizzes, questions, submissions | `/api/assessments` | 5007 | 8007 | [Swagger](http://localhost:5007/swagger) |
+| Certificate | Completion certificates | `/api/certificates` | 5008 | 8008 | [Swagger](http://localhost:5008/swagger) |
+| Review | Course reviews and ratings | `/api/reviews` | 5009 | 8009 | [Swagger](http://localhost:5009/swagger) |
+| Notification | Email notifications and consumers | `/api/notifications` | 5010 | 8010 | [Swagger](http://localhost:5010/swagger) |
+| User | User profiles and preferences | `/api/users` | 5011 | 8011 | [Swagger](http://localhost:5011/swagger) |
+| Media | Media metadata and file storage | `/api/media` | 5012 | 8012 | [Swagger](http://localhost:5012/swagger) |
+| Payment | Stripe payments and webhooks | `/api/payments`, `/api/webhook` | 5013 | 8013 | [Swagger](http://localhost:5013/swagger) |
+| Search | Course search indexing | `/api/search` | 5014 | 8014 | [Swagger](http://localhost:5014/swagger) |
+| Discussion | Threads and comments | `/api/threads` | 5015 | 8015 | [Swagger](http://localhost:5015/swagger) |
+
+When services run inside Docker, the browser uses the external ports. The gateway forwards traffic to the internal Docker ports.
+
+## Infrastructure Map
+
+| Tool | Purpose | External Port | Internal Port | URL |
+| --- | --- | ---: | ---: | --- |
+| RabbitMQ | Message broker | 5672 | 5672 | `amqp://localhost:5672` |
+| RabbitMQ Management | Queue dashboard | 15672 | 15672 | [http://localhost:15672](http://localhost:15672) |
+| MailHog SMTP | Local SMTP server | 1025 | 1025 | `localhost:1025` |
+| MailHog Inbox | Local email inbox | 8025 | 8025 | [http://localhost:8025](http://localhost:8025) |
+| Meilisearch | Search engine | 7700 | 7700 | [http://localhost:7700](http://localhost:7700) |
+| MinIO API | Object storage API | 9000 | 9000 | [http://localhost:9000](http://localhost:9000) |
+| MinIO Console | Object storage dashboard | 9001 | 9001 | [http://localhost:9001](http://localhost:9001) |
+
+Default local dashboard credentials:
+
+- RabbitMQ: `guest` / `guest`
+- MinIO: `minioadmin` / `minioadmin`
 
 ## Configuration
 
-Local secrets should not be committed. This repo is now configured to ignore files such as:
+Local secrets should not be committed. The repository ignores common secret files such as `.env`, `docker/.env`, `appsettings.json`, and `appsettings.Development.json`.
 
-- `docker/.env`
-- `appsettings.json`
-- `appsettings.Development.json`
+Create `docker/.env` for Docker-based development:
 
-Typical local configuration includes:
+```env
+AZURE_SQL_CONNECTION=Server=...
+JWT_SECRET=replace-with-a-long-secret
+RABBITMQ_USER=guest
+RABBITMQ_PASSWORD=guest
+MEILI_MASTER_KEY=masterKey123
+MINIO_ROOT_USER=minioadmin
+MINIO_ROOT_PASSWORD=minioadmin
+MINIO_BUCKET_NAME=olms-media
+SMTP_HOST=mailhog
+SMTP_PORT=1025
+SMTP_SENDER_EMAIL=noreply@lms.com
+SMTP_SENDER_NAME=LMS Notifications
+```
 
-- `AZURE_SQL_CONNECTION`
-- `JWT_SECRET`
+PaymentService also expects Stripe configuration in its local app settings or environment:
 
-Create your own local environment values before running the services.
+```env
+Stripe__SecretKey=sk_test_...
+Stripe__WebhookSecret=whsec_...
+```
 
-## Running the Project Locally
+## Run Locally
 
-### 1. Restore dependencies
+Restore dependencies from the repository root:
 
 ```powershell
 dotnet restore
 ```
 
-### 2. Run individual services
+Run the gateway:
 
-Use these commands from the repository root:
+```powershell
+dotnet run --project gateway/ApiGateway/ApiGateway.csproj
+```
+
+Run a service:
 
 ```powershell
 dotnet run --project microservices/IdentityService/IdentityService.API/IdentityService.API.csproj
 dotnet run --project microservices/CategoryService/CategoryService.API/CategoryService.API.csproj
 dotnet run --project microservices/CourseService/CourseService.API/CourseService.API.csproj
 dotnet run --project microservices/ContentService/ContentService.API/ContentService.API.csproj
-dotnet run --project gateway/ApiGateway/ApiGateway.csproj
 ```
 
-## Running with Docker
+Use the same pattern for the remaining services:
 
-The repository includes Docker support under the `docker/` folder.
+```powershell
+dotnet run --project microservices/<ServiceName>/<ServiceName>.API/<ServiceName>.API.csproj
+```
 
-### Start the configured containers
+## Run with Docker
+
+From the repository root:
+
+```powershell
+docker-compose -f docker/docker-compose.yml --env-file docker/.env up -d --build
+```
+
+Or from the `docker/` folder:
 
 ```powershell
 cd docker
-docker-compose --env-file .env up --build
+docker-compose --env-file .env up -d --build
 ```
-`docker-compose -f docker/docker-compose.yml up --build` \____/
 
-### Current Docker compose exposure
+Useful Docker commands:
 
-The current `docker-compose.yml` exposes:
+| Task | Command |
+| --- | --- |
+| Start everything | `docker-compose -f docker/docker-compose.yml --env-file docker/.env up -d --build` |
+| Rebuild after code changes | `docker-compose -f docker/docker-compose.yml --env-file docker/.env up -d --build --force-recreate` |
+| Stop everything | `docker-compose -f docker/docker-compose.yml down` |
+| Check service status | `docker-compose -f docker/docker-compose.yml ps` |
+| View MediaService logs | `docker-compose -f docker/docker-compose.yml logs -f mediaservice` |
+| Remove containers and volumes | `docker-compose -f docker/docker-compose.yml down -v` |
 
-- `ApiGateway` on `http://localhost:5000`
-- `IdentityService` on `http://localhost:5001`
-- `CourseService` on `http://localhost:5002`
+`down -v` deletes Docker volumes, including local MinIO and Meilisearch data.
 
-If you expand Docker usage for the other services, keep their environment variables and routing definitions aligned with the gateway configuration.
+## Entity Framework Core
 
-## Entity Framework Core Commands
-
-If you are working on migrations, common commands are:
+Common EF Core commands:
 
 ```powershell
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 ```
 
-If a project does not yet have the required EF Core packages, install the relevant dependencies in that project first.
+For service-specific migrations, run the command against the API project and the infrastructure project that contains the `DbContext`.
 
-## Common Packages Used
-
-Examples used across the solution include:
+Example:
 
 ```powershell
-dotnet add package Yarp.ReverseProxy
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-dotnet add package Microsoft.EntityFrameworkCore.Tools
-dotnet add package Microsoft.EntityFrameworkCore.Design
-dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
-dotnet add package BCrypt.Net-Next
-dotnet add package Swashbuckle.AspNetCore
+dotnet ef migrations add InitialCreate `
+  --project microservices/IdentityService/IdentityService.Infrastructure `
+  --startup-project microservices/IdentityService/IdentityService.API
+
+dotnet ef database update `
+  --project microservices/IdentityService/IdentityService.Infrastructure `
+  --startup-project microservices/IdentityService/IdentityService.API
 ```
+
+## Event-Driven Flows
+
+### Notification Flow
+
+1. A domain action happens in a source service, such as a new enrollment.
+2. The source service publishes a shared integration event, such as `EnrollmentCreatedEvent`.
+3. RabbitMQ routes the message to the configured queue.
+4. `NotificationService` consumes the event through MassTransit.
+5. The consumer builds an email message.
+6. `EmailService` sends the email through SMTP.
+7. In local Docker development, MailHog captures the message at [http://localhost:8025](http://localhost:8025).
+
+### Payment and Enrollment Flow
+
+1. The user chooses to buy a course.
+2. The client sends the request through the API Gateway to `PaymentService`.
+3. `PaymentService` creates a Stripe PaymentIntent.
+4. The frontend collects card details through Stripe.
+5. Stripe calls the webhook endpoint after payment processing.
+6. `PaymentService` updates the payment record and publishes `PaymentCompletedEvent`.
+7. Downstream services, such as `EnrollmentService`, can consume the event and enroll the user.
 
 ## Development Notes
 
 - The project targets `net10.0`.
-- Shared abstractions live under `shared/`.
-- HTTP request sample files are included in several API projects for quick endpoint testing.
-- The API Gateway is intended to be the main public entry point once routing is fully configured.
-
-## Current Status
-
-### Implemented or actively built
-
-- Identity management with JWT authentication
-- Category management
-- Course management
-- Content and lesson management
-- Gateway foundation with reverse proxy support
-
-### Present in the codebase and ready for continued development
-
-- Enrollment
-- Progress tracking
-- Assessments
-- Reviews
-- Notifications
-- Certificates
-- Media handling
-- User service
-
-## Recommended Next Improvements
-
-- Add a safe `docker/.env.example` with placeholder values
-- Document gateway routes explicitly in the README
-- Add service-to-port mapping for every microservice
-- Add database migration instructions per service
-- Add architecture diagrams and request flow examples
+- HTTP sample files are available in API projects as `*.http`.
+- The gateway route configuration is in `gateway/ApiGateway/appsettings.json`.
+- Docker service definitions live in `docker/docker-compose.yml`.
+- Shared contracts should be changed carefully because multiple services depend on them.
+- Keep secrets in local environment files or user secrets, not in source control.
 
 ## Contributing
 
 1. Create a feature branch.
 2. Keep secrets out of Git.
-3. Use environment-specific local config files.
+3. Follow the existing service layout.
 4. Test the affected service before opening a pull request.
-
-
-## API Gateway & Infrastructure
-
-| Service / Tool | External Port | Internal Port | URL / Dashboard |
-| --- | ---: | ---: | --- |
-| RabbitMQ | 15672 | 15672 | [Dashboard](http://localhost:15672) (guest/guest) |
-| MinIO Storage | 9001 | 9001 | [Console](http://localhost:9001) (minioadmin/minioadmin) |
-| MailHog | 8025 | 8025 | [Email Inbox](http://localhost:8025) |
-
----
-
-## Microservices Connectivity & Swagger Map
-
-| Service Name | Gateway Route | Ext. Port (PC) | Int. Port (Docker) |
-| --- | --- | ---: | ---: |
-| API Gateway | `/` | 5000 | 8000 |
-| Identity | `/api/auth` | 5001 | 8001 |
-| Category | `/api/categories` | 5002 | 8002 |
-| Course | `/api/courses` | 5003 | 8003 |
-| Content | `/api/lessons` | 5004 | 8004 |
-| Enrollment | `/api/enrollment` | 5005 | 8005 |
-| Progress | `/api/progress` | 5006 | 8006 |
-| Assessment | `/api/assessment` | 5007 | 8007 |
-| Certificate | `/api/certificate` | 5008 | 8008 |
-| Review | `/api/review` | 5009 | 8009 |
-| Notification | `/api/notification` | 5010 | 8010 |
-| User | `/api/user` | 5011 | 8011 |
-| Media | `/api/media` | 5012 | 8012 |
-| Payment | `/api/payment` | 5013 | 8013 |
-| Search | `/api/search` | 5014 | 8014 |
-| Discussion | `/api/discussion` | 5015 | 8015 |
-
----
-
-## Swagger URL
-
-| Service | Swagger URL |
-| --- | --- |
-| Identity | [http://localhost:8001/swagger](http://localhost:8001/swagger) |
-| Category | [http://localhost:8002/swagger](http://localhost:8002/swagger) |
-| Course | [http://localhost:8003/swagger](http://localhost:8003/swagger) |
-| Content | [http://localhost:8004/swagger](http://localhost:8004/swagger) |
-| Enrollment | [http://localhost:8005/swagger](http://localhost:8005/swagger) |
-| Progress | [http://localhost:8006/swagger](http://localhost:8006/swagger) |
-| Assessment | [http://localhost:8007/swagger](http://localhost:8007/swagger) |
-| Certificate | [http://localhost:8008/swagger](http://localhost:8008/swagger) |
-| Review | [http://localhost:8009/swagger](http://localhost:8009/swagger) |
-| Notification | [http://localhost:8010/swagger](http://localhost:8010/swagger) |
-| User | [http://localhost:8011/swagger](http://localhost:8011/swagger) |
-| Media | [http://localhost:8012/swagger](http://localhost:8012/swagger) |
-| Payment | [http://localhost:8013/swagger](http://localhost:8013/swagger) |
-| Search | [http://localhost:8014/swagger](http://localhost:8014/swagger) |
-| Discussion | [http://localhost:8015/swagger](http://localhost:8015/swagger) |
-
----
-
-## Architecture Summary
-
-Here is a summary of the project architecture and what I understand:
-
-- Architecture: A modular, microservices-oriented backend built with .NET 10 and ASP.NET Core Web API.
-- Gateway: Central entry point routed via YARP (ApiGateway).
-- Microservices: 12 distinct domain services (Identity, Category, Course, Content, Enrollment, Progress, Assessment, Review, Notification, Certificate, Media, and User).
-- Additional routed services shown in the gateway map include Payment, Search, and Discussion.
-- Design Pattern: Each microservice strictly adheres to Clean Architecture patterns, split into:
-  - API (Controllers, Program setup)
-  - Application (Business logic, DTOs, Interfaces, Services)
-  - Domain (Entities, core domain logic)
-  - Infrastructure (Entity Framework Core Data context, Repositories)
-- Shared Context: A SharedKernel project is used to house shared Base classes, Common utilities, Contracts (for messaging), Enums, Interfaces, and ValueObjects.
-- Event-Driven Messaging: The architecture employs MassTransit and RabbitMQ for asynchronous system-wide events (e.g., triggering email notifications via NotificationService when enrollments happen).
-- Deployment: Local and containerized development setups using Docker Compose with predefined routing and port configurations.
-
-## Docker Command
-
-| Task | Command |
-| --- | --- |
-| Start everything (First time) | `docker-compose up -d --build` |
-| Start after code changes | `docker-compose up -d --build --force-recreate` |
-| Stop everything | `docker-compose down` |
-| Check service status | `docker-compose ps` |
-| View Media Service logs | `docker-compose logs -f mediaservice` |
-| Remove all data (Clean slate) | `docker-compose down -v` (Caution: Deletes DB & Files) |
-
----
-# Summary of the Flow
-   1. User clicks "Buy Course".
-   2. ApiGateway routes request to PaymentService.
-   3. PaymentService asks Stripe for a PaymentIntent.
-   4. User enters card info on the frontend (securely sent to Stripe, not you).
-   5. Stripe processes the money and pings your Webhook.
-   6. PaymentService updates the DB and shouts "Payment Done!" via RabbitMQ.
-   7. EnrollmentService hears the shout and adds the user to the course.
+5. Update this README when routes, ports, infrastructure, or setup steps change.

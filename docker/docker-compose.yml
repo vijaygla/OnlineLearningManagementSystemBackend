@@ -110,6 +110,8 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
+      - Stripe__PublishableKey=${STRIPE_PUBLISHABLE_KEY}
+      - Stripe__SecretKey=${STRIPE_SECRET_KEY}
 
   searchservice:
     build:
