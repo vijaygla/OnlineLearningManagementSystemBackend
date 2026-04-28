@@ -6,6 +6,23 @@ builder.Services.AddReverseProxy()
 
 var app = builder.Build();
 
+// --- Manual CORS Middleware (Nuclear Option) ---
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+    context.Response.Headers.Append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    context.Response.Headers.Append("Access-Control-Allow-Headers", "*");
+
+    if (context.Request.Method == "OPTIONS")
+    {
+        context.Response.StatusCode = 204; // No Content
+        await context.Response.CompleteAsync();
+        return;
+    }
+
+    await next();
+});
+
 app.UseRouting();
 
 app.MapGet("/", () => "Online Learning Management System API Gateway is running!");
