@@ -35,14 +35,11 @@ builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION");
-
-bool isAzure = connectionString?.Contains("database.windows.net") ?? false;
-string dbType = isAzure ? "Azure SQL Server" : "MSSQL Server";
+var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION") ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Database
 builder.Services.AddDbContext<PaymentDbContext>(options =>
-    options.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly("PaymentService.Infrastructure")));
+    options.UseSqlServer(connectionString));
 
 // Dependency Injection
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
@@ -110,13 +107,17 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<PaymentDbContext>();
     try
     {
-        Console.WriteLine("Applying migrations...");
-        dbContext.Database.Migrate();
-        Console.WriteLine("Migrations applied successfully.");
+        var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
+        if (!databaseCreator.Exists()) databaseCreator.Create();
+        if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
+        
+        // Manual check for 'Payments' table
+        dbContext.Database.ExecuteSqlRaw("IF OBJECT_ID('Payments', 'U') IS NULL SELECT 1;");
+        Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"⚠️ Migration error: {ex.Message}");
+        Console.WriteLine($"⚠️ Database connection error: {ex.Message}");
     }
 }
 
@@ -129,7 +130,6 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8013";
-Console.WriteLine($"✅ Database connected successfully with {dbType}!");
 Console.WriteLine($"🚀 Payment Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

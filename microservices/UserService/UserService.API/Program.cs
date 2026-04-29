@@ -35,18 +35,13 @@ builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-                      ?? Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION");
-
-bool isAzure = connectionString?.Contains("database.windows.net") ?? false;
-string dbType = isAzure ? "Azure SQL Server" : "MSSQL Server";
+var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION") ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<UserDbContext>(options =>
     options.UseSqlServer(connectionString, sqlOptions =>
     {
         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
         sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-        sqlOptions.MigrationsAssembly("UserService.Infrastructure");
     }));
 
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
@@ -127,13 +122,17 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<UserDbContext>();
     try
     {
-        Console.WriteLine("Applying migrations...");
-        dbContext.Database.Migrate();
-        Console.WriteLine("Migrations applied successfully.");
+        var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
+        if (!databaseCreator.Exists()) databaseCreator.Create();
+        if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
+        
+        // Manual check for 'UserProfiles' table
+        dbContext.Database.ExecuteSqlRaw("IF OBJECT_ID('UserProfiles', 'U') IS NULL SELECT 1;");
+        Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"⚠️ Migration error: {ex.Message}");
+        Console.WriteLine($"⚠️ Database connection error: {ex.Message}");
     }
 }
 
@@ -149,7 +148,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 var port = "8011";
-Console.WriteLine($"✅ Database connected successfully with {dbType}!");
 Console.WriteLine($"🚀 User Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

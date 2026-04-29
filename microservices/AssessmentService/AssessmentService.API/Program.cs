@@ -33,9 +33,8 @@ builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-                      ?? Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION");
-bool isAzure = connectionString?.Contains("database.windows.net") ?? false;
+var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION")
+                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
              ?? builder.Configuration["Jwt:Key"]
@@ -49,7 +48,6 @@ builder.Services.AddDbContext<AssessmentDbContext>(options =>
     {
         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
         sqlOptions.CommandTimeout(60);
-        sqlOptions.MigrationsAssembly("AssessmentService.Infrastructure");
     }));
 
 builder.Services.AddScoped<IAssessmentRepository, AssessmentRepository>();
@@ -95,13 +93,13 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<AssessmentDbContext>();
     try
     {
-        Console.WriteLine("Applying migrations...");
-        dbContext.Database.Migrate();
-        Console.WriteLine("Migrations applied successfully.");
+        var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
+        if (!databaseCreator.Exists()) databaseCreator.Create();
+        if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"⚠️ Migration error: {ex.Message}");
+        Console.WriteLine($"Database initialization failed: {ex.Message}");
     }
 }
 
@@ -114,8 +112,7 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8007";
-string dbType = isAzure ? "Azure SQL Server" : "MSSQL Server";
-Console.WriteLine($"✅ Database connected successfully with {dbType}!");
+Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Assessment Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

@@ -55,8 +55,11 @@ public class AuthService : IAuthService
 
         return new AuthResponseDto
         {
+            Name = user.Name,
             Email = user.Email,
-            Token = _token.GenerateToken(user)
+            Token = _token.GenerateToken(user),
+            Role = user.Role,
+            ProfilePictureUrl = user.ProfilePictureUrl
         };
     }
 
@@ -84,8 +87,11 @@ public class AuthService : IAuthService
 
         return new AuthResponseDto
         {
+            Name = user.Name,
             Email = user.Email,
-            Token = _token.GenerateToken(user)
+            Token = _token.GenerateToken(user),
+            Role = user.Role,
+            ProfilePictureUrl = user.ProfilePictureUrl
         };
     }
 
@@ -112,7 +118,8 @@ public class AuthService : IAuthService
                     Name = payload.Name,
                     Email = payload.Email,
                     PasswordHash = string.Empty, // Google users don't have a password hash in our DB
-                    Role = "Student"
+                    Role = "Student",
+                    ProfilePictureUrl = payload.Picture
                 };
                 await _repo.AddAsync(user);
 
@@ -125,11 +132,20 @@ public class AuthService : IAuthService
                     CreatedAt = DateTime.UtcNow
                 });
             }
+            else if (string.IsNullOrEmpty(user.ProfilePictureUrl) && !string.IsNullOrEmpty(payload.Picture))
+            {
+                // Update profile picture if user exists but has none
+                user.ProfilePictureUrl = payload.Picture;
+                await _repo.UpdateAsync(user);
+            }
 
             return new AuthResponseDto
             {
+                Name = user.Name,
                 Email = user.Email,
-                Token = _token.GenerateToken(user)
+                Token = _token.GenerateToken(user),
+                Role = user.Role,
+                ProfilePictureUrl = user.ProfilePictureUrl
             };
         }
         catch (InvalidJwtException ex)

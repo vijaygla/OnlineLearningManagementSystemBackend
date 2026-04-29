@@ -34,16 +34,12 @@ builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-                      ?? Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION");
-bool isAzure = connectionString?.Contains("database.windows.net") ?? false;
+var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION")
+                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Database
 builder.Services.AddDbContext<DiscussionDbContext>(options =>
-    options.UseSqlServer(connectionString, sqlOptions =>
-    {
-        sqlOptions.MigrationsAssembly("DiscussionService.Infrastructure");
-    }));
+    options.UseSqlServer(connectionString));
 
 // Dependency Injection
 builder.Services.AddScoped<IDiscussionRepository, DiscussionRepository>();
@@ -110,13 +106,13 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<DiscussionDbContext>();
     try
     {
-        Console.WriteLine("Applying migrations...");
-        dbContext.Database.Migrate();
-        Console.WriteLine("Migrations applied successfully.");
+        var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
+        if (!databaseCreator.Exists()) databaseCreator.Create();
+        if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"⚠️ Migration error: {ex.Message}");
+        Console.WriteLine($"Database initialization failed: {ex.Message}");
     }
 }
 
@@ -129,8 +125,7 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8015";
-string dbType = isAzure ? "Azure SQL Server" : "MSSQL Server";
-Console.WriteLine($"✅ Database connected successfully with {dbType}!");
+Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Discussion Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

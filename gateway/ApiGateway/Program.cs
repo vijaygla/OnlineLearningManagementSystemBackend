@@ -9,9 +9,9 @@ var app = builder.Build();
 // --- Manual CORS Middleware (Nuclear Option) ---
 app.Use(async (context, next) =>
 {
-    context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
-    context.Response.Headers.Append("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    context.Response.Headers.Append("Access-Control-Allow-Headers", "*");
+    context.Response.Headers["Access-Control-Allow-Origin"] = "*";
+    context.Response.Headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS";
+    context.Response.Headers["Access-Control-Allow-Headers"] = "*";
 
     if (context.Request.Method == "OPTIONS")
     {

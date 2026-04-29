@@ -32,20 +32,8 @@ builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
-// Add CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-                      ?? Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION");
-bool isAzure = connectionString?.Contains("database.windows.net") ?? false;
+var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION")
+                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
              ?? builder.Configuration["Jwt:Key"]
@@ -59,7 +47,6 @@ builder.Services.AddDbContext<CourseDbContext>(options =>
     {
         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
         sqlOptions.CommandTimeout(60);
-        sqlOptions.MigrationsAssembly("CourseService.Infrastructure");
     }));
 
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
@@ -105,28 +92,27 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<CourseDbContext>();
     try
     {
-        Console.WriteLine("Applying migrations...");
-        dbContext.Database.Migrate();
-        Console.WriteLine("Migrations applied successfully.");
+        var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
+        if (!databaseCreator.Exists()) databaseCreator.Create();
+        try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Courses"); }
+        catch { databaseCreator.CreateTables(); }
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"⚠️ Migration error: {ex.Message}");
+        Console.WriteLine($"Database initialization failed: {ex.Message}");
     }
 }
 
 app.UseSwagger();
 app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Course Service API v1"); options.RoutePrefix = "swagger"; });
 
-app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8003";
-string dbType = isAzure ? "Azure SQL Server" : "MSSQL Server";
-Console.WriteLine($"✅ Database connected successfully with {dbType}!");
+Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Course Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 
