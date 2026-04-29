@@ -43,8 +43,9 @@ builder.Services.AddCors(options =>
     });
 });
 
-var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION")
-                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                      ?? Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION");
+bool isAzure = connectionString?.Contains("database.windows.net") ?? false;
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
              ?? builder.Configuration["Jwt:Key"]
@@ -58,6 +59,7 @@ builder.Services.AddDbContext<CourseDbContext>(options =>
     {
         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
         sqlOptions.CommandTimeout(60);
+        sqlOptions.MigrationsAssembly("CourseService.Infrastructure");
     }));
 
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
@@ -103,28 +105,14 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<CourseDbContext>();
     try
     {
-        var databaseCreator = dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
-        if (databaseCreator != null)
-        {
-            if (!databaseCreator.Exists()) databaseCreator.Create();
-
-            // We check if a core table exists to determine if we need to create the schema for this service.
-            // This prevents EF Core from throwing a noisy 'Table already exists' exception in the console.
-            try
-            {
-                // Silently check if the table exists.
-                // If this throws, it means the table definitely isn't there.
-                dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Courses");
-            }
-            catch
-            {
-                // Table doesn't exist, so we can try to create it.
-                // Using EnsureCreated() here is safe because we've confirmed the table is missing.
-                databaseCreator.CreateTables();
-            }
-        }
+        Console.WriteLine("Applying migrations...");
+        dbContext.Database.Migrate();
+        Console.WriteLine("Migrations applied successfully.");
     }
-    catch (Exception ex) { Console.WriteLine($"⚠️ Sync notice: {ex.Message}"); }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"⚠️ Migration error: {ex.Message}");
+    }
 }
 
 app.UseSwagger();
@@ -137,7 +125,8 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8003";
-Console.WriteLine("✅ Database connected successfully!");
+string dbType = isAzure ? "Azure SQL Server" : "MSSQL Server";
+Console.WriteLine($"✅ Database connected successfully with {dbType}!");
 Console.WriteLine($"🚀 Course Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

@@ -32,8 +32,9 @@ builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Warning);
 
 builder.Services.AddControllers();
 
-var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION")
-                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                      ?? Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION");
+bool isAzure = connectionString?.Contains("database.windows.net") ?? false;
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
              ?? builder.Configuration["Jwt:Key"]
@@ -45,6 +46,7 @@ var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "IdentityServiceClien
 builder.Services.AddDbContext<CertificateDbContext>(options =>
     options.UseSqlServer(connectionString, sqlOptions =>
     {
+        sqlOptions.MigrationsAssembly("CertificateService.Infrastructure");
         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
         sqlOptions.CommandTimeout(60);
     }));
@@ -92,16 +94,14 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<CertificateDbContext>();
     try
     {
-        var databaseCreator = dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
-        if (databaseCreator != null)
-        {
-            if (!databaseCreator.Exists()) databaseCreator.Create();
-            try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Certificates"); }
-            catch { databaseCreator.CreateTables(); }
-        }
-        Console.WriteLine("✅ Database connected successfully!");
+        Console.WriteLine("Applying migrations...");
+        dbContext.Database.Migrate();
+        Console.WriteLine("Migrations applied successfully.");
     }
-    catch { /* Silently handle sync notice */ }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"⚠️ Migration error: {ex.Message}");
+    }
 }
 
 app.UseSwagger();
@@ -113,6 +113,8 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8008";
+string dbType = isAzure ? "Azure SQL Server" : "MSSQL Server";
+Console.WriteLine($"✅ Database connected successfully with {dbType}!");
 Console.WriteLine($"🚀 Certificate Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

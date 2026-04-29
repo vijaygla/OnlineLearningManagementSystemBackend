@@ -35,6 +35,9 @@ builder.Services.AddControllers();
 var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION")
                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
 
+bool isAzure = connectionString?.Contains("database.windows.net") ?? false;
+string dbType = isAzure ? "Azure SQL Server" : "MSSQL Server";
+
 var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
              ?? builder.Configuration["Jwt:Key"]
              ?? "THIS_IS_SECRET_KEY_CHANGE_IT_1234567890";
@@ -47,6 +50,7 @@ builder.Services.AddDbContext<ReviewDbContext>(options =>
     {
         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
         sqlOptions.CommandTimeout(60);
+        sqlOptions.MigrationsAssembly("ReviewService.Infrastructure");
     }));
 
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
@@ -92,15 +96,14 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<ReviewDbContext>();
     try
     {
-        var databaseCreator = dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
-        if (databaseCreator != null)
-        {
-            if (!databaseCreator.Exists()) databaseCreator.Create();
-            try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Reviews"); }
-            catch { databaseCreator.CreateTables(); }
-        }
+        Console.WriteLine("Applying migrations...");
+        dbContext.Database.Migrate();
+        Console.WriteLine("Migrations applied successfully.");
     }
-    catch { /* Silently handle sync notice */ }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"⚠️ Migration error: {ex.Message}");
+    }
 }
 
 app.UseSwagger();
@@ -112,7 +115,7 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8009";
-Console.WriteLine("✅ Database connected successfully!");
+Console.WriteLine($"✅ Database connected successfully with {dbType}!");
 Console.WriteLine($"🚀 Review Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

@@ -32,8 +32,9 @@ builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
-var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION")
-                      ?? builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                      ?? Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION");
+bool isAzure = connectionString?.Contains("database.windows.net") ?? false;
 
 var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
              ?? builder.Configuration["Jwt:Key"]
@@ -47,6 +48,7 @@ builder.Services.AddDbContext<CategoryDbContext>(options =>
     {
         sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
         sqlOptions.CommandTimeout(60);
+        sqlOptions.MigrationsAssembly("CategoryService.Infrastructure");
     }));
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -92,23 +94,14 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<CategoryDbContext>();
     try
     {
-        var databaseCreator = dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
-        if (databaseCreator != null)
-        {
-            if (!databaseCreator.Exists()) databaseCreator.Create();
-
-            try
-            {
-                // Silently check if the table exists
-                dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Categories");
-            }
-            catch
-            {
-                databaseCreator.CreateTables();
-            }
-        }
+        Console.WriteLine("Applying migrations...");
+        dbContext.Database.Migrate();
+        Console.WriteLine("Migrations applied successfully.");
     }
-    catch (Exception ex) { Console.WriteLine($"⚠️ Sync notice: {ex.Message}"); }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"⚠️ Migration error: {ex.Message}");
+    }
 }
 
 app.UseSwagger();
@@ -120,7 +113,8 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8002";
-Console.WriteLine("✅ Database connected successfully!");
+string dbType = isAzure ? "Azure SQL Server" : "MSSQL Server";
+Console.WriteLine($"✅ Database connected successfully with {dbType}!");
 Console.WriteLine($"🚀 Category Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 
