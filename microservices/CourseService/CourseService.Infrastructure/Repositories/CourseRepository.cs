@@ -24,6 +24,11 @@ public class CourseRepository : ICourseRepository
         return await _context.Courses.ToListAsync();
     }
 
+    public async Task<IEnumerable<Course>> GetByStatusAsync(SharedKernel.Enums.CourseStatus status)
+    {
+        return await _context.Courses.Where(c => c.Status == status).ToListAsync();
+    }
+
     public async Task<IEnumerable<Course>> GetByInstructorIdAsync(Guid instructorId)
     {
         return await _context.Courses.Where(c => c.InstructorId == instructorId).ToListAsync();

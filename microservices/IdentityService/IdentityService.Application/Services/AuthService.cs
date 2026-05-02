@@ -4,6 +4,7 @@ using IdentityService.Application.Interfaces;
 using IdentityService.Domain.Entities;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Shared.Contracts.Events;
 
 namespace IdentityService.Application.Services;
@@ -14,13 +15,15 @@ public class AuthService : IAuthService
     private readonly ITokenService _token;
     private readonly IConfiguration _config;
     private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ILogger<AuthService> _logger;
 
-    public AuthService(IUserRepository repo, ITokenService token, IConfiguration config, IPublishEndpoint publishEndpoint)
+    public AuthService(IUserRepository repo, ITokenService token, IConfiguration config, IPublishEndpoint publishEndpoint, ILogger<AuthService> logger)
     {
         _repo = repo;
         _token = token;
         _config = config;
         _publishEndpoint = publishEndpoint;
+        _logger = logger;
     }
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterRequestDto request)
@@ -33,25 +36,41 @@ public class AuthService : IAuthService
             throw new InvalidOperationException("User already exists.");
         }
 
+        // Generate a strict 6-digit OTP
+        var otp = new Random().Next(100000, 1000000).ToString();
         var user = new User
         {
             Id = Guid.NewGuid(),
             Name = request.Name.Trim(),
             Email = request.Email.Trim(),
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            Role = string.IsNullOrWhiteSpace(request.Role) ? "Student" : request.Role.Trim()
+            Role = string.IsNullOrWhiteSpace(request.Role) ? "Student" : request.Role.Trim(),
+            IsEmailVerified = false,
+            EmailOtp = otp,
+            OtpExpiry = DateTime.UtcNow.AddMinutes(15)
         };
 
         await _repo.AddAsync(user);
 
-        // Publish UserCreatedEvent
-        await _publishEndpoint.Publish(new UserCreatedEvent
+        try
         {
-            UserId = user.Id,
-            Email = user.Email,
-            FullName = user.Name,
-            CreatedAt = DateTime.UtcNow
-        });
+            // Publish UserCreatedEvent with OTP
+            _logger.LogInformation("📢 Publishing UserCreatedEvent for {Email} with OTP {Otp}", user.Email, otp);
+            await _publishEndpoint.Publish(new UserCreatedEvent
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                FullName = user.Name,
+                Otp = otp,
+                CreatedAt = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            var isDevelopment = _config["ASPNETCORE_ENVIRONMENT"] == "Development" || _config["Environment"] == "Development";
+            _logger.LogError(ex, "⚠️ Messaging Error (Registration): {Message}", ex.Message);
+            if (!isDevelopment) throw;
+        }
 
         return new AuthResponseDto
         {
@@ -63,9 +82,23 @@ public class AuthService : IAuthService
         };
     }
 
+    public async Task<bool> VerifyOtpAsync(string email, string otp)
+    {
+        var user = await _repo.GetByEmailAsync(email);
+        if (user == null || user.EmailOtp != otp || user.OtpExpiry < DateTime.UtcNow)
+        {
+            return false;
+        }
+
+        user.IsEmailVerified = true;
+        user.EmailOtp = null;
+        user.OtpExpiry = null;
+        await _repo.UpdateAsync(user);
+        return true;
+    }
+
     public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request)
     {
-        // ... (rest of LoginAsync remains unchanged)
         ValidateLoginRequest(request);
 
         var user = await _repo.GetByEmailAsync(request.Email.Trim());
@@ -85,6 +118,12 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Invalid credentials.");
         }
 
+        // --- MANDATORY: Enforce email verification for all users ---
+        if (!user.IsEmailVerified)
+        {
+            throw new UnauthorizedAccessException("Please verify your email address before logging in.");
+        }
+
         return new AuthResponseDto
         {
             Name = user.Name,
@@ -93,6 +132,50 @@ public class AuthService : IAuthService
             Role = user.Role,
             ProfilePictureUrl = user.ProfilePictureUrl
         };
+    }
+
+    public async Task ForgotPasswordAsync(string email)
+    {
+        var user = await _repo.GetByEmailAsync(email.Trim());
+        if (user == null) return; 
+
+        var otp = new Random().Next(100000, 1000000).ToString();
+        user.EmailOtp = otp;
+        user.OtpExpiry = DateTime.UtcNow.AddMinutes(15);
+        await _repo.UpdateAsync(user);
+
+        try 
+        {
+            await _publishEndpoint.Publish(new ForgotPasswordEvent
+            {
+                Email = user.Email,
+                FullName = user.Name,
+                Otp = otp,
+                CreatedAt = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            var isDevelopment = _config["ASPNETCORE_ENVIRONMENT"] == "Development" || _config["Environment"] == "Development";
+            Console.WriteLine($"⚠️ Messaging Error (Forgot Password): {ex.Message}");
+            if (!isDevelopment) throw;
+        }
+    }
+
+    public async Task<bool> ResetPasswordAsync(ResetPasswordRequestDto request)
+    {
+        var user = await _repo.GetByEmailAsync(request.Email);
+        if (user == null || user.EmailOtp != request.Otp || user.OtpExpiry < DateTime.UtcNow)
+        {
+            return false;
+        }
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+        user.EmailOtp = null;
+        user.OtpExpiry = null;
+        user.IsEmailVerified = true; // Resetting password via OTP also verifies email
+        await _repo.UpdateAsync(user);
+        return true;
     }
 
     public async Task<AuthResponseDto> LoginWithGoogleAsync(GoogleLoginRequestDto request)
@@ -119,7 +202,8 @@ public class AuthService : IAuthService
                     Email = payload.Email,
                     PasswordHash = string.Empty, // Google users don't have a password hash in our DB
                     Role = "Student",
-                    ProfilePictureUrl = payload.Picture
+                    ProfilePictureUrl = payload.Picture,
+                    IsEmailVerified = true
                 };
                 await _repo.AddAsync(user);
 

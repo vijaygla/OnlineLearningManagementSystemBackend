@@ -51,6 +51,14 @@ public class EnrollmentController : ControllerBase
         return Ok(results);
     }
 
+    [HttpGet("course/{courseId}/count")]
+    [AllowAnonymous] // Allow instructors or anyone to see enrollment count for a course
+    public async Task<IActionResult> GetCourseEnrollmentCount(Guid courseId)
+    {
+        var count = await _service.GetEnrollmentCountAsync(courseId);
+        return Ok(count);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {

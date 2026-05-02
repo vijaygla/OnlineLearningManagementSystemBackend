@@ -14,4 +14,10 @@ public class User
     public string Role { get; set; } = "Student";
 
     public string? ProfilePictureUrl { get; set; }
+
+    public bool IsEmailVerified { get; set; } = false;
+
+    public string? EmailOtp { get; set; }
+
+    public DateTime? OtpExpiry { get; set; }
 }

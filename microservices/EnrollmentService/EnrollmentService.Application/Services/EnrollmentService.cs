@@ -60,6 +60,11 @@ public class EnrollmentService : IEnrollmentService
         return enrollments.Select(MapToDto);
     }
 
+    public async Task<int> GetEnrollmentCountAsync(Guid courseId)
+    {
+        return await _repo.GetCountByCourseIdAsync(courseId);
+    }
+
     public async Task<EnrollmentResponseDto?> GetEnrollmentDetailsAsync(Guid id)
     {
         var enrollment = await _repo.GetByIdAsync(id);

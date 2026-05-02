@@ -59,22 +59,28 @@ DTOs/
  GoogleLoginRequestDto.cs
  LoginRequestDto.cs
  RegisterRequestDto.cs
+ ResendOtpRequestDto.cs
+ ResetPasswordRequestDto.cs
+ VerifyOtpRequestDto.cs
 Interfaces/
  IAuthService.cs
  ITokenService.cs
  IUserRepository.cs
+ IUserService.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  IdentityService.Application.AssemblyInfo.cs
  IdentityService.Application.GlobalUsings.g.cs
-Services/AuthService.cs
+Services/
+ AuthService.cs
+ UserService.cs
 Validators/RegisterValidator.cs
 
 [metadataReferences]
 ../
  ../../shared/SharedKernel/obj/Debug/net10.0/ref/SharedKernel.dll
  IdentityService.Domain/obj/Debug/net10.0/ref/IdentityService.Domain.dll
-<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.6/ref/net10.0/
+<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.7/ref/net10.0/
  Microsoft.CSharp.dll
  Microsoft.VisualBasic.Core.dll
  Microsoft.VisualBasic.dll
@@ -264,14 +270,14 @@ Validators/RegisterValidator.cs
  system.management/7.0.2/lib/net7.0/System.Management.dll
 
 [analyzerReferences]
-<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.6/analyzers/dotnet/cs/
+<DOTNET>/packs/Microsoft.NETCore.App.Ref/10.0.7/analyzers/dotnet/cs/
  Microsoft.Interop.ComInterfaceGenerator.dll
  Microsoft.Interop.JavaScript.JSImportGenerator.dll
  Microsoft.Interop.LibraryImportGenerator.dll
  Microsoft.Interop.SourceGeneration.dll
  System.Text.Json.SourceGeneration.dll
  System.Text.RegularExpressions.Generator.dll
-<DOTNET>/sdk/10.0.202/Sdks/Microsoft.NET.Sdk/analyzers/
+<DOTNET>/sdk/10.0.203/Sdks/Microsoft.NET.Sdk/analyzers/
  Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll
  Microsoft.CodeAnalysis.NetAnalyzers.dll
 <NUGET>/
@@ -279,5 +285,5 @@ Validators/RegisterValidator.cs
  microsoft.extensions.options/8.0.0/analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Options.SourceGeneration.dll
 
 [analyzerConfigFiles]
-<DOTNET>/sdk/10.0.202/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_10_default.globalconfig
+<DOTNET>/sdk/10.0.203/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_10_default.globalconfig
 obj/Debug/net10.0/IdentityService.Application.GeneratedMSBuildEditorConfig.editorconfig

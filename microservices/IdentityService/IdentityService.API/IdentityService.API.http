@@ -1,74 +1,69 @@
 @IdentityService_HostAddress = http://localhost:8001
 
-### [ANYONE] Register Admin User
-# Used by: New Administrators to set up system access
-POST {{IdentityService_HostAddress}}/api/Auth/register
-Content-Type: application/json
-
-{
-  "name": "Admin User",
-  "email": "admin@example.com",
-  "password": "Password123!",
-  "role": "Admin"
-}
-
-### [ANYONE] Register Instructor User
-# Used by: Subject matter experts to create and manage courses
-POST {{IdentityService_HostAddress}}/api/Auth/register
-Content-Type: application/json
-
-{
-  "name": "Instructor User",
-  "email": "instructor@example.com",
-  "password": "Password123!",
-  "role": "Instructor"
-}
-
 ### [ANYONE] Register Student User
-# Used by: Learners to enroll and view course content
+# Used by: Learners to enroll and view course content. 
+# NOTE: User must verify OTP before login will succeed.
 POST {{IdentityService_HostAddress}}/api/Auth/register
 Content-Type: application/json
 
 {
-  "name": "Student1",
-  "email": "student1@gmail.com",
-  "password": "Student1@123",
+  "name": "Vijay Kumar",
+  "email": "pmdhrs@gmail.com",
+  "password": "Vijay@123",
   "role": "Student"
 }
 
+### [ANYONE] Verify OTP
+# Used by: Users to verify their email address after registration or password reset.
+# Use the 6-digit code from your email or the identity.db file.
+POST {{IdentityService_HostAddress}}/api/Auth/verify-otp
+Content-Type: application/json
 
-### [ANYONE] Login Admin User
-# Returns: JWT Token for Admin actions
+{
+  "email": "pmdhrs@gmail.com",
+  "otp": "328403"
+}
+
+### [ANYONE] Resend OTP
+# Used by: Users who didn't receive the code or it expired.
+POST {{IdentityService_HostAddress}}/api/Auth/resend-otp
+Content-Type: application/json
+
+{
+  "email": "pmdhrs@gmail.com"
+}
+
+### [ANYONE] Login User
+# Returns: JWT Token. 
+# FAIL: Will return 401 if email is not verified.
 POST {{IdentityService_HostAddress}}/api/Auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@example.com",
+  "email": "pmdhrs@gmail.com",
   "password": "Password123!"
 }
 
-### [ANYONE] Login Instructor User
-# Returns: JWT Token for Instructor actions (Course creation, lesson management)
-POST {{IdentityService_HostAddress}}/api/Auth/login
+### [ANYONE] Forgot Password
+# Sends: A 6-digit OTP to the user's email.
+POST {{IdentityService_HostAddress}}/api/Auth/forgot-password
+Content-Type: application/json
+
+"pmdhrs@gmail.com"
+
+### [ANYONE] Reset Password
+# Used by: Users to set a new password using the OTP received in email.
+POST {{IdentityService_HostAddress}}/api/Auth/reset-password
 Content-Type: application/json
 
 {
-  "email": "instructor@example.com",
-  "password": "Password123!"
-}
-
-### [ANYONE] Login Student User
-# Returns: JWT Token for Student actions (Viewing courses, enrollment)
-POST {{IdentityService_HostAddress}}/api/Auth/login
-Content-Type: application/json
-
-{
-  "email": "student1@gmail.com",
-  "password": "Student1@123"
+  "email": "pmdhrs@gmail.com",
+  "otp": "123456",
+  "newPassword": "NewPassword123!"
 }
 
 ### [ANYONE] Google Login
-# Returns: JWT Token for users authenticated via Google
+# Returns: JWT Token for users authenticated via Google.
 POST {{IdentityService_HostAddress}}/api/Auth/google-login
 Content-Type: application/json
 
@@ -76,6 +71,12 @@ Content-Type: application/json
   "idToken": "YOUR_GOOGLE_ID_TOKEN_HERE"
 }
 
+### [ANYONE] Check Service Status
+# Returns: Database and RabbitMQ connectivity status.
+GET {{IdentityService_HostAddress}}/api/Auth/status
+
 ### [AUTHORIZED] Test Secure Endpoint
+# Requires: Valid JWT in Authorization header.
 GET {{IdentityService_HostAddress}}/api/Auth/secure
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjdmMDVmMjJkLWUzYmUtNDEzNy1iMjQwLWFmZmI0ZjRmMjdmOSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJBZG1pbiBVc2VyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsImV4cCI6MTc3NzE1OTU2OSwiaXNzIjoiSWRlbnRpdHlTZXJ2aWNlIiwiYXVkIjoiSWRlbnRpdHlTZXJ2aWNlQ2xpZW50cyJ9.fIKvYm-XkhRHUs1kwqpr-mJvFyInQllFuAGSS6JrOz8
+Authorization: Bearer YOUR_TOKEN_HERE
+

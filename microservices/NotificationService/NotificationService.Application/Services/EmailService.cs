@@ -1,4 +1,5 @@
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using NotificationService.Application.Configurations;
@@ -28,12 +29,20 @@ public class EmailService : IEmailService
         };
 
         using var client = new SmtpClient();
-        // For Mailhog or local testing, we often don't need SSL
-        await client.ConnectAsync(_settings.Host, _settings.Port, false);
+        
+        // Gmail uses Port 587 with STARTTLS
+        // If port is 587, use StartTls. If 465, use SslOnConnect. Else None/Auto.
+        var secureSocketOptions = _settings.Port == 587 
+            ? SecureSocketOptions.StartTls 
+            : (_settings.Port == 465 ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.Auto);
+
+        await client.ConnectAsync(_settings.Host, _settings.Port, secureSocketOptions);
 
         if (!string.IsNullOrEmpty(_settings.Password))
         {
-            await client.AuthenticateAsync(_settings.SenderEmail, _settings.Password);
+            // Use Username for authentication if provided, otherwise fallback to SenderEmail
+            var authUser = !string.IsNullOrEmpty(_settings.Username) ? _settings.Username : _settings.SenderEmail;
+            await client.AuthenticateAsync(authUser, _settings.Password);
         }
 
         await client.SendAsync(message);

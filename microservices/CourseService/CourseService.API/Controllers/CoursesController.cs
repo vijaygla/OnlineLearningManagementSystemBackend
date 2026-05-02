@@ -25,6 +25,26 @@ public class CoursesController : ControllerBase
         return Ok(courses);
     }
 
+    [HttpGet("instructor")]
+    [Authorize]
+    public async Task<IActionResult> GetByInstructor()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized();
+
+        var instructorId = Guid.Parse(userIdClaim);
+        var courses = await _courseService.GetCoursesByInstructorAsync(instructorId);
+        return Ok(courses);
+    }
+
+    [HttpGet("status/{status}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetByStatus(CourseStatus status)
+    {
+        var courses = await _courseService.GetCoursesByStatusAsync(status);
+        return Ok(courses);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -62,7 +82,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPatch("{id}/status")]
-    [Authorize] // Should be restricted to Admin
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateCourseStatusRequest request)
     {
         await _courseService.UpdateCourseStatusAsync(id, request.Status);

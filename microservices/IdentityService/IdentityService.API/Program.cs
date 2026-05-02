@@ -12,15 +12,27 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-// --- Custom .env Loader (Fix: Needs 3 levels to reach root) ---
+// --- Custom .env Loader ---
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
 if (File.Exists(envPath))
 {
+    int count = 0;
     foreach (var line in File.ReadAllLines(envPath))
     {
+        if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith('#')) continue;
+        
         var parts = line.Split('=', 2);
-        if (parts.Length == 2) Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim().Trim('"'));
+        if (parts.Length == 2)
+        {
+            Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim().Trim('"'));
+            count++;
+        }
     }
+    Console.WriteLine($"⚙️ Loaded {count} variables from {envPath}");
+}
+else
+{
+    Console.WriteLine($"⚠️ .env file NOT found at: {envPath}");
 }
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,12 +56,22 @@ var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "IdentityService";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "IdentityServiceClients";
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString, sqlOptions =>
-    {
-        sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
-        sqlOptions.CommandTimeout(60);
-    }));
+var useSqlite = Environment.GetEnvironmentVariable("USE_SQLITE") == "true";
+
+if (useSqlite)
+{
+    Console.WriteLine("💾 Using SQLite database as requested.");
+    builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=identity.db"));
+}
+else
+{
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(connectionString, sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), null);
+            sqlOptions.CommandTimeout(10);
+        }));
+}
 
 // MassTransit Configuration
 builder.Services.AddMassTransit(x =>
@@ -69,6 +91,7 @@ builder.Services.AddMassTransit(x =>
 });
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService>(_ => new TokenService(jwtKey, jwtIssuer, jwtAudience));
 
@@ -126,34 +149,10 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     try
     {
-        var databaseCreator = dbContext.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
-        if (databaseCreator != null)
-        {
-            if (!databaseCreator.Exists()) databaseCreator.Create();
-            try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Users"); }
-            catch { databaseCreator.CreateTables(); }
-        }
+        // Cross-database compatible initialization
+        dbContext.Database.EnsureCreated();
 
-        // --- NEW: Ensure ProfilePictureUrl column exists ---
-        try
-        {
-            var checkColumnSql = @"
-                IF NOT EXISTS (
-                    SELECT * FROM sys.columns 
-                    WHERE object_id = OBJECT_ID('Users') AND name = 'ProfilePictureUrl'
-                )
-                BEGIN
-                    ALTER TABLE Users ADD ProfilePictureUrl NVARCHAR(MAX) NULL;
-                END";
-            dbContext.Database.ExecuteSqlRaw(checkColumnSql);
-            // Console.WriteLine("✅ ProfilePictureUrl column check completed.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"⚠️ Column sync notice: {ex.Message}");
-        }
-
-        // --- NEW: Seed Admin User ---
+        // --- Seed Admin User ---
         var adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL");
         var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
 

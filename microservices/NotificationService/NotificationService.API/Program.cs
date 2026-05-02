@@ -4,15 +4,27 @@ using NotificationService.Application.Consumers;
 using NotificationService.Application.Interfaces;
 using NotificationService.Application.Services;
 
-// --- Custom .env Loader (following the project pattern) ---
+// --- Custom .env Loader ---
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
 if (File.Exists(envPath))
 {
+    int count = 0;
     foreach (var line in File.ReadAllLines(envPath))
     {
+        if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith('#')) continue;
+        
         var parts = line.Split('=', 2);
-        if (parts.Length == 2) Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim().Trim('"'));
+        if (parts.Length == 2)
+        {
+            Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim().Trim('"'));
+            count++;
+        }
     }
+    Console.WriteLine($"⚙️ Loaded {count} variables from {envPath}");
+}
+else
+{
+    Console.WriteLine($"⚠️ .env file NOT found at: {envPath}");
 }
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,11 +40,12 @@ builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 // Email Configuration
 builder.Services.Configure<EmailSettings>(options =>
 {
-    options.Host = Environment.GetEnvironmentVariable("Smtp__Host") ?? builder.Configuration["Smtp:Host"] ?? "localhost";
-    options.Port = int.Parse(Environment.GetEnvironmentVariable("Smtp__Port") ?? builder.Configuration["Smtp:Port"] ?? "1025");
-    options.SenderEmail = Environment.GetEnvironmentVariable("Smtp__SenderEmail") ?? builder.Configuration["Smtp:SenderEmail"] ?? "noreply@lms.com";
-    options.SenderName = Environment.GetEnvironmentVariable("Smtp__SenderName") ?? builder.Configuration["Smtp:SenderName"] ?? "LMS Notifications";
-    options.Password = Environment.GetEnvironmentVariable("Smtp__Password") ?? builder.Configuration["Smtp:Password"] ?? "";
+    options.Host = Environment.GetEnvironmentVariable("SMTP_HOST") ?? builder.Configuration["Smtp:Host"] ?? "localhost";
+    options.Port = int.Parse(Environment.GetEnvironmentVariable("SMTP_PORT") ?? builder.Configuration["Smtp:Port"] ?? "1025");
+    options.Username = Environment.GetEnvironmentVariable("SMTP_USER") ?? builder.Configuration["Smtp:Username"] ?? "";
+    options.SenderEmail = Environment.GetEnvironmentVariable("SMTP_SENDER_EMAIL") ?? builder.Configuration["Smtp:SenderEmail"] ?? "noreply@lms.com";
+    options.SenderName = Environment.GetEnvironmentVariable("SMTP_SENDER_NAME") ?? builder.Configuration["Smtp:SenderName"] ?? "LMS Notifications";
+    options.Password = Environment.GetEnvironmentVariable("SMTP_PASSWORD") ?? builder.Configuration["Smtp:Password"] ?? "";
 });
 
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -41,6 +54,8 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<EnrollmentCreatedConsumer>();
+    x.AddConsumer<UserCreatedConsumer>();
+    x.AddConsumer<ForgotPasswordConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -57,6 +72,16 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("enrollment-created-queue", e =>
         {
             e.ConfigureConsumer<EnrollmentCreatedConsumer>(context);
+        });
+
+        cfg.ReceiveEndpoint("user-created-queue", e =>
+        {
+            e.ConfigureConsumer<UserCreatedConsumer>(context);
+        });
+
+        cfg.ReceiveEndpoint("forgot-password-queue", e =>
+        {
+            e.ConfigureConsumer<ForgotPasswordConsumer>(context);
         });
     });
 });
