@@ -11,10 +11,12 @@ namespace IdentityService.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _auth;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IAuthService auth)
+    public AuthController(IAuthService auth, ILogger<AuthController> logger)
     {
         _auth = auth;
+        _logger = logger;
     }
 
     [HttpPost("register")]
@@ -120,12 +122,22 @@ public class AuthController : ControllerBase
     {
         try
         {
-            await _auth.ForgotPasswordAsync(dto.Email); // Reuses the OTP generation/sending logic
+            _logger.LogInformation("🔄 Resending verification OTP for: {Email}", dto.Email);
+            await _auth.ResendVerificationOtpAsync(dto.Email);
             return Ok(new { message = "OTP sent successfully." });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { message = ex.Message });
         }
         catch (Exception ex)
         {
-            return BadRequest(new { message = ex.Message });
+            _logger.LogError(ex, "❌ Failed to resend OTP for {Email}: {Message}", dto.Email, ex.Message);
+            return StatusCode(500, new { message = "An error occurred while re-sending the verification email. Please ensure the messaging service is available." });
         }
     }
 

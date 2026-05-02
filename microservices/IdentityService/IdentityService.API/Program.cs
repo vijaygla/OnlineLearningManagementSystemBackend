@@ -39,10 +39,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
-builder.Logging.SetMinimumLevel(LogLevel.Warning);
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 builder.Logging.AddFilter("Microsoft", LogLevel.Warning);
-builder.Logging.AddFilter("MassTransit", LogLevel.Error);
-builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
+builder.Logging.AddFilter("MassTransit", LogLevel.Warning);
+builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Information);
 
 builder.Services.AddControllers();
 

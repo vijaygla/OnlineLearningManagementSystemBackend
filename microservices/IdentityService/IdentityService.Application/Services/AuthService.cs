@@ -162,6 +162,50 @@ public class AuthService : IAuthService
         }
     }
 
+    public async Task ResendVerificationOtpAsync(string email)
+    {
+        var user = await _repo.GetByEmailAsync(email.Trim());
+        if (user == null)
+        {
+            throw new ArgumentException("No account found with this email address.");
+        }
+
+        if (user.IsEmailVerified)
+        {
+            throw new InvalidOperationException("This email address is already verified.");
+        }
+
+        var otp = new Random().Next(100000, 1000000).ToString();
+        user.EmailOtp = otp;
+        user.OtpExpiry = DateTime.UtcNow.AddMinutes(15);
+        await _repo.UpdateAsync(user);
+
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        try
+        {
+            _logger.LogInformation("📢 Publishing UserCreatedEvent (Resend) for {Email} with OTP {Otp}", user.Email, otp);
+            await _publishEndpoint.Publish(new UserCreatedEvent
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                FullName = user.Name,
+                Otp = otp,
+                CreatedAt = DateTime.UtcNow
+            }, cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogError("🕒 Resend OTP timed out while publishing to RabbitMQ for {Email}", user.Email);
+            throw new Exception("The messaging service is taking too long to respond. Please try again later.");
+        }
+        catch (Exception ex)
+        {
+            var isDevelopment = _config["ASPNETCORE_ENVIRONMENT"] == "Development" || _config["Environment"] == "Development";
+            _logger.LogError(ex, "⚠️ Messaging Error (Resend OTP): {Message}", ex.Message);
+            if (!isDevelopment) throw;
+        }
+    }
+
     public async Task<bool> ResetPasswordAsync(ResetPasswordRequestDto request)
     {
         var user = await _repo.GetByEmailAsync(request.Email);

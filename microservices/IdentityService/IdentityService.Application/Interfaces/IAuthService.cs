@@ -9,5 +9,6 @@ public interface IAuthService
     Task<AuthResponseDto> LoginWithGoogleAsync(GoogleLoginRequestDto request);
     Task<bool> VerifyOtpAsync(string email, string otp);
     Task ForgotPasswordAsync(string email);
+    Task ResendVerificationOtpAsync(string email);
     Task<bool> ResetPasswordAsync(ResetPasswordRequestDto request);
 }
