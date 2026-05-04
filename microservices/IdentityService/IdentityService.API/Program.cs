@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SharedKernel.Utilities;
 
 // --- Custom .env Loader ---
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
@@ -209,8 +210,10 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8001";
+PortReclaimer.Reclaim(int.Parse(port));
+
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Identity Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 
-app.Run();
+app.Run($"http://0.0.0.0:{port}");

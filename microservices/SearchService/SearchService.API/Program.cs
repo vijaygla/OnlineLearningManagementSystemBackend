@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SearchService.Application.Interfaces;
 using SearchService.Infrastructure.Services;
+using MassTransit;
+using SearchService.Application.Consumers;
 
 // --- Custom .env Loader ---
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
@@ -17,6 +19,26 @@ if (File.Exists(envPath))
 }
 
 var builder = WebApplication.CreateBuilder(args);
+
+// MassTransit Configuration
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<CourseApprovedConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost", "/", h =>
+        {
+            h.Username(Environment.GetEnvironmentVariable("RABBITMQ_USER") ?? "guest");
+            h.Password(Environment.GetEnvironmentVariable("RABBITMQ_PASS") ?? "guest");
+        });
+
+        cfg.ReceiveEndpoint("search-course-approved", e =>
+        {
+            e.ConfigureConsumer<CourseApprovedConsumer>(context);
+        });
+    });
+});
 
 // --- Clean Logging Configuration ---
 builder.Logging.ClearProviders();

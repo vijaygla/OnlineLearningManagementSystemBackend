@@ -1,16 +1,20 @@
 using CourseService.Application.Interfaces;
 using CourseService.Domain.Entities;
 using SharedKernel.Enums;
+using MassTransit;
+using Shared.Contracts.Events;
 
 namespace CourseService.Application.Services;
 
 public class CourseService : ICourseService
 {
     private readonly ICourseRepository _courseRepository;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public CourseService(ICourseRepository courseRepository)
+    public CourseService(ICourseRepository courseRepository, IPublishEndpoint publishEndpoint)
     {
         _courseRepository = courseRepository;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task<Course?> GetCourseByIdAsync(Guid id)
@@ -66,9 +70,26 @@ public class CourseService : ICourseService
         var course = await _courseRepository.GetByIdAsync(id);
         if (course != null)
         {
+            var oldStatus = course.Status;
             course.Status = status;
             course.LastModifiedAt = DateTime.UtcNow;
             await _courseRepository.UpdateAsync(course);
+
+            if (oldStatus != CourseStatus.Approved && status == CourseStatus.Approved)
+            {
+                await _publishEndpoint.Publish(new CourseApprovedEvent
+                {
+                    CourseId = course.Id,
+                    CourseTitle = course.Title,
+                    CourseDescription = course.Description,
+                    CategoryId = course.CategoryId,
+                    InstructorId = course.InstructorId,
+                    InstructorEmail = "instructor@example.com", // In a real app, we might fetch this
+                    Price = course.Price,
+                    ThumbnailUrl = "https://images.unsplash.com/photo-1498050108023-c5249f4df085", // Placeholder
+                    ApprovedAt = DateTime.UtcNow
+                });
+            }
         }
     }
 

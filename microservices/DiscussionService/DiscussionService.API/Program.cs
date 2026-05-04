@@ -10,6 +10,7 @@ using DiscussionService.Application.Interfaces;
 using DiscussionService.Application.Services;
 using DiscussionService.Infrastructure.Data;
 using DiscussionService.Infrastructure.Repositories;
+using SharedKernel.Utilities;
 
 // --- Custom .env Loader (Fix: Needs 3 levels to reach root) ---
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
@@ -125,6 +126,8 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8015";
+PortReclaimer.Reclaim(int.Parse(port));
+
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Discussion Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");

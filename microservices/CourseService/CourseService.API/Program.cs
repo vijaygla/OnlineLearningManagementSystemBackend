@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MassTransit;
+using SharedKernel.Utilities;
 
 // --- Custom .env Loader (Fix: Needs 3 levels to reach root) ---
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
@@ -16,6 +18,8 @@ if (File.Exists(envPath))
 {
     foreach (var line in File.ReadAllLines(envPath))
     {
+        if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith('#')) continue;
+        
         var parts = line.Split('=', 2);
         if (parts.Length == 2) Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim().Trim('"'));
     }
@@ -23,12 +27,29 @@ if (File.Exists(envPath))
 
 var builder = WebApplication.CreateBuilder(args);
 
+// MassTransit Configuration
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        var rabbitHost = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
+        var rabbitUser = Environment.GetEnvironmentVariable("RABBITMQ_USER") ?? "guest";
+        var rabbitPass = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
+
+        cfg.Host(rabbitHost, "/", h =>
+        {
+            h.Username(rabbitUser);
+            h.Password(rabbitPass);
+        });
+    });
+});
+
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
-builder.Logging.SetMinimumLevel(LogLevel.Warning);
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 builder.Logging.AddFilter("Microsoft", LogLevel.Warning);
 builder.Logging.AddFilter("MassTransit", LogLevel.Warning);
-builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
+builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.Information);
 
 builder.Services.AddControllers();
 
@@ -42,12 +63,22 @@ var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "IdentityService";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "IdentityServiceClients";
 
-builder.Services.AddDbContext<CourseDbContext>(options =>
-    options.UseSqlServer(connectionString, sqlOptions =>
-    {
-        sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(30), null);
-        sqlOptions.CommandTimeout(60);
-    }));
+var useSqlite = Environment.GetEnvironmentVariable("USE_SQLITE") == "true";
+
+if (useSqlite)
+{
+    Console.WriteLine("💾 Using SQLite database as requested.");
+    builder.Services.AddDbContext<CourseDbContext>(options => options.UseSqlite("Data Source=course.db"));
+}
+else
+{
+    builder.Services.AddDbContext<CourseDbContext>(options =>
+        options.UseSqlServer(connectionString, sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), null);
+            sqlOptions.CommandTimeout(10);
+        }));
+}
 
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICourseService, CourseService.Application.Services.CourseService>();
@@ -92,14 +123,12 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<CourseDbContext>();
     try
     {
-        var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
-        if (!databaseCreator.Exists()) databaseCreator.Create();
-        try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Courses"); }
-        catch { databaseCreator.CreateTables(); }
+        // Cross-database compatible initialization
+        dbContext.Database.EnsureCreated();
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Database initialization failed: {ex.Message}");
+        Console.WriteLine($"⚠️ Sync notice: {ex.Message}");
     }
 }
 
@@ -112,6 +141,8 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8003";
+PortReclaimer.Reclaim(int.Parse(port));
+
 Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Course Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");

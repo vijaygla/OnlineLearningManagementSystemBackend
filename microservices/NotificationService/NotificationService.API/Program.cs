@@ -3,6 +3,7 @@ using NotificationService.Application.Configurations;
 using NotificationService.Application.Consumers;
 using NotificationService.Application.Interfaces;
 using NotificationService.Application.Services;
+using SharedKernel.Utilities;
 
 // --- Custom .env Loader ---
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
@@ -56,6 +57,7 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<EnrollmentCreatedConsumer>();
     x.AddConsumer<UserCreatedConsumer>();
     x.AddConsumer<ForgotPasswordConsumer>();
+    x.AddConsumer<CourseApprovedConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -83,6 +85,11 @@ builder.Services.AddMassTransit(x =>
         {
             e.ConfigureConsumer<ForgotPasswordConsumer>(context);
         });
+
+        cfg.ReceiveEndpoint("course-approved-queue", e =>
+        {
+            e.ConfigureConsumer<CourseApprovedConsumer>(context);
+        });
     });
 });
 
@@ -106,6 +113,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 var port = "8010";
+PortReclaimer.Reclaim(int.Parse(port));
+
 Console.WriteLine($"🚀 Notification Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

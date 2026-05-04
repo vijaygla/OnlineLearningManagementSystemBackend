@@ -1,3 +1,5 @@
+using SharedKernel.Utilities;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add YARP services and load configuration from appsettings.json
@@ -10,7 +12,7 @@ var app = builder.Build();
 app.Use(async (context, next) =>
 {
     context.Response.Headers["Access-Control-Allow-Origin"] = "*";
-    context.Response.Headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS";
+    context.Response.Headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, PATCH, OPTIONS";
     context.Response.Headers["Access-Control-Allow-Headers"] = "*";
 
     if (context.Request.Method == "OPTIONS")
@@ -31,6 +33,8 @@ app.MapGet("/", () => "Online Learning Management System API Gateway is running!
 app.MapReverseProxy();
 
 var port = 8000;
+PortReclaimer.Reclaim(port);
+
 Console.WriteLine($"🚀 API Gateway is running on port {port}");
 
 // Dynamic display of routes based on configuration

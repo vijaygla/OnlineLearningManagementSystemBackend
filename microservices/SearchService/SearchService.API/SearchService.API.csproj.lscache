@@ -64,6 +64,7 @@ Program.cs
 
 [metadataReferences]
 ../
+ ../../shared/SharedKernel/obj/Debug/net10.0/ref/SharedKernel.dll
  SearchService.Application/obj/Debug/net10.0/ref/SearchService.Application.dll
  SearchService.Domain/obj/Debug/net10.0/ref/SearchService.Domain.dll
  SearchService.Infrastructure/obj/Debug/net10.0/ref/SearchService.Infrastructure.dll

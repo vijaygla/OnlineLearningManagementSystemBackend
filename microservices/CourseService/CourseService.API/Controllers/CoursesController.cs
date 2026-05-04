@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
+using System.Text.Json.Serialization;
+
 namespace CourseService.API.Controllers;
 
 [ApiController]
@@ -98,6 +100,16 @@ public class CoursesController : ControllerBase
     }
 }
 
-public record CreateCourseRequest(string Title, string Description, Guid CategoryId, decimal Price);
-public record UpdateCourseRequest(string Title, string Description, decimal Price);
-public record UpdateCourseStatusRequest(CourseStatus Status);
+public record CreateCourseRequest(
+    [property: JsonPropertyName("title")] string Title, 
+    [property: JsonPropertyName("description")] string Description, 
+    [property: JsonPropertyName("categoryId")] Guid CategoryId, 
+    [property: JsonPropertyName("price")] decimal Price);
+
+public record UpdateCourseRequest(
+    [property: JsonPropertyName("title")] string Title, 
+    [property: JsonPropertyName("description")] string Description, 
+    [property: JsonPropertyName("price")] decimal Price);
+
+public record UpdateCourseStatusRequest(
+    [property: JsonPropertyName("status")] CourseStatus Status);

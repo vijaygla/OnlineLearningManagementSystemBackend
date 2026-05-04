@@ -60,6 +60,7 @@ Base/
 Contracts/Events/
  CourseApprovedEvent.cs
  EnrollmentCreatedEvent.cs
+ ForgotPasswordEvent.cs
  PaymentCompletedEvent.cs
  ProgressUpdatedEvent.cs
  UserCreatedEvent.cs
