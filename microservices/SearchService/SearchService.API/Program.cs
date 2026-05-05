@@ -24,6 +24,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<CourseApprovedConsumer>();
+    x.AddConsumer<UserCreatedConsumer>();
+    x.AddConsumer<UserDeletedConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -36,6 +38,16 @@ builder.Services.AddMassTransit(x =>
         cfg.ReceiveEndpoint("search-course-approved", e =>
         {
             e.ConfigureConsumer<CourseApprovedConsumer>(context);
+        });
+
+        cfg.ReceiveEndpoint("search-user-created", e =>
+        {
+            e.ConfigureConsumer<UserCreatedConsumer>(context);
+        });
+
+        cfg.ReceiveEndpoint("search-user-deleted", e =>
+        {
+            e.ConfigureConsumer<UserDeletedConsumer>(context);
         });
     });
 });

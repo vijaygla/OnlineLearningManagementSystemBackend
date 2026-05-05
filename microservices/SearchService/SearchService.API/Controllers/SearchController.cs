@@ -28,6 +28,17 @@ namespace SearchService.API.Controllers
             return Ok(results);
         }
 
+        [HttpGet("users")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> SearchUsers([FromQuery] string q)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+                return BadRequest("Search query cannot be empty");
+
+            var results = await _searchService.SearchUsersAsync(q);
+            return Ok(results);
+        }
+
         [HttpGet("test")]
         [AllowAnonymous]
         public async Task<IActionResult> Test()
@@ -44,11 +55,27 @@ namespace SearchService.API.Controllers
             return Ok(new { Message = "Sync successful", CourseId = course.Id });
         }
 
+        [HttpPost("sync/user")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> SyncUser(UserSearchIndex user)
+        {
+            await _searchService.UpsertUserIndexAsync(user);
+            return Ok(new { Message = "User Sync successful", UserId = user.Id });
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(string id)
         {
             await _searchService.DeleteCourseIndexAsync(id);
+            return NoContent();
+        }
+
+        [HttpDelete("user/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            await _searchService.DeleteUserIndexAsync(id);
             return NoContent();
         }
     }
