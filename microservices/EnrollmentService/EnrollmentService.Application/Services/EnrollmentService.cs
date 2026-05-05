@@ -18,7 +18,7 @@ public class EnrollmentService : IEnrollmentService
         _publishEndpoint = publishEndpoint;
     }
 
-    public async Task<EnrollmentResponseDto> EnrollStudentAsync(Guid studentId, EnrollmentRequestDto request)
+    public async Task<EnrollmentResponseDto> EnrollStudentAsync(Guid studentId, string studentEmail, EnrollmentRequestDto request)
     {
         var existing = await _repo.GetByStudentAndCourseAsync(studentId, request.CourseId);
         if (existing != null)
@@ -46,8 +46,8 @@ public class EnrollmentService : IEnrollmentService
             EnrollmentId = enrollment.Id,
             StudentId = studentId,
             CourseId = request.CourseId,
-            StudentEmail = "student@example.com", // In a real scenario, fetch this from Identity/User service
-            CourseName = "Sample Course", // In a real scenario, fetch this from Course service
+            StudentEmail = studentEmail,
+            CourseName = string.IsNullOrWhiteSpace(request.CourseName) ? "Unknown Course" : request.CourseName,
             CreatedAt = enrollment.CreatedAt
         });
 

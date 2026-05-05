@@ -5,6 +5,7 @@ namespace EnrollmentService.Application.DTOs;
 public class EnrollmentRequestDto
 {
     public Guid CourseId { get; set; }
+    public string CourseName { get; set; } = string.Empty;
 }
 
 public class EnrollmentResponseDto

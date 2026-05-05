@@ -8,11 +8,13 @@ namespace NotificationService.Application.Consumers;
 public class UserCreatedConsumer : IConsumer<UserCreatedEvent>
 {
     private readonly IEmailService _emailService;
+    private readonly INotificationService _notificationService;
     private readonly ILogger<UserCreatedConsumer> _logger;
 
-    public UserCreatedConsumer(IEmailService emailService, ILogger<UserCreatedConsumer> logger)
+    public UserCreatedConsumer(IEmailService emailService, INotificationService notificationService, ILogger<UserCreatedConsumer> logger)
     {
         _emailService = emailService;
+        _notificationService = notificationService;
         _logger = logger;
     }
 
@@ -24,6 +26,7 @@ public class UserCreatedConsumer : IConsumer<UserCreatedEvent>
         if (!string.IsNullOrEmpty(message.Otp))
         {
             var subject = "Verify your email - Online Learning Management System";
+            // ... (body logic)
             var body = $@"
                 <div style='font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;'>
                     <h2 style='color: #0ea5e9;'>Welcome to OLMS!</h2>
@@ -38,7 +41,17 @@ public class UserCreatedConsumer : IConsumer<UserCreatedEvent>
                 </div>";
 
             await _emailService.SendEmailAsync(message.Email, subject, body);
-            _logger.LogInformation("✅ Verification email (with OTP) sent to: {Email}", message.Email);
+            
+            // Create In-App Notification (For OTP verification)
+            await _notificationService.CreateNotificationAsync(new NotificationService.Domain.Entities.Notification
+            {
+                UserId = message.UserId,
+                Title = "Account Created",
+                Message = $"Hi {message.FullName}, your account has been created. Please verify your email using the OTP sent to your inbox.",
+                Type = "Info"
+            });
+
+            _logger.LogInformation("✅ Verification email (with OTP) and in-app alert sent to: {Email}", message.Email);
         }
         else
         {
@@ -57,7 +70,17 @@ public class UserCreatedConsumer : IConsumer<UserCreatedEvent>
                 </div>";
 
             await _emailService.SendEmailAsync(message.Email, subject, body);
-            _logger.LogInformation("✅ Welcome email (no OTP) sent to: {Email}", message.Email);
+
+            // Create In-App Notification
+            await _notificationService.CreateNotificationAsync(new NotificationService.Domain.Entities.Notification
+            {
+                UserId = message.UserId,
+                Title = "Welcome to OLMS!",
+                Message = $"Hi {message.FullName}, we're glad to have you here. Explore our courses and start learning!",
+                Type = "Info"
+            });
+
+            _logger.LogInformation("✅ Welcome email (no OTP) and in-app alert sent to: {Email}", message.Email);
         }
     }
 }

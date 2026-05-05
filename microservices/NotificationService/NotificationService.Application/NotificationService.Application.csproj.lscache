@@ -60,7 +60,9 @@ Consumers/
  EnrollmentCreatedConsumer.cs
  ForgotPasswordConsumer.cs
  UserCreatedConsumer.cs
-Interfaces/IEmailService.cs
+Interfaces/
+ IEmailService.cs
+ INotificationService.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs
  NotificationService.Application.AssemblyInfo.cs

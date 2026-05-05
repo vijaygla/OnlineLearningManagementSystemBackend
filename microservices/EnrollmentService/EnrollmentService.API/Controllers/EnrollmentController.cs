@@ -22,14 +22,16 @@ public class EnrollmentController : ControllerBase
     public async Task<IActionResult> Enroll(EnrollmentRequestDto dto)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null) return Unauthorized();
+        var emailClaim = User.FindFirst(ClaimTypes.Email);
+
+        if (userIdClaim == null || emailClaim == null) return Unauthorized();
 
         if (!Guid.TryParse(userIdClaim.Value, out var studentId))
             return BadRequest("Invalid student ID in token.");
 
         try
         {
-            var result = await _service.EnrollStudentAsync(studentId, dto);
+            var result = await _service.EnrollStudentAsync(studentId, emailClaim.Value, dto);
             return Ok(result);
         }
         catch (InvalidOperationException ex)
