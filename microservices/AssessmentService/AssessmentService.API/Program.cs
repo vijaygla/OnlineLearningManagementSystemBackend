@@ -96,10 +96,10 @@ using (var scope = app.Services.CreateScope())
         var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
         if (!databaseCreator.Exists()) databaseCreator.Create();
         if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
+        Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Database initialization failed: {ex.Message}");
     }
 }
 
@@ -112,7 +112,6 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8007";
-Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Assessment Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

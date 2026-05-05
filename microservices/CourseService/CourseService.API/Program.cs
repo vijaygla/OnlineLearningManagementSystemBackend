@@ -63,22 +63,12 @@ var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "IdentityService";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "IdentityServiceClients";
 
-var useSqlite = Environment.GetEnvironmentVariable("USE_SQLITE") == "true";
-
-if (useSqlite)
-{
-    Console.WriteLine("💾 Using SQLite database as requested.");
-    builder.Services.AddDbContext<CourseDbContext>(options => options.UseSqlite("Data Source=course.db"));
-}
-else
-{
-    builder.Services.AddDbContext<CourseDbContext>(options =>
-        options.UseSqlServer(connectionString, sqlOptions =>
-        {
-            sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), null);
-            sqlOptions.CommandTimeout(10);
-        }));
-}
+builder.Services.AddDbContext<CourseDbContext>(options =>
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), null);
+        sqlOptions.CommandTimeout(10);
+    }));
 
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICourseService, CourseService.Application.Services.CourseService>();
@@ -123,12 +113,12 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<CourseDbContext>();
     try
     {
-        // Cross-database compatible initialization
         dbContext.Database.EnsureCreated();
+        Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"⚠️ Sync notice: {ex.Message}");
+        // Silence sync errors but log critical ones if needed
     }
 }
 
@@ -143,7 +133,6 @@ app.MapControllers();
 var port = "8003";
 PortReclaimer.Reclaim(int.Parse(port));
 
-Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Course Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

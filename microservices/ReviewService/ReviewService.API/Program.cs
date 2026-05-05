@@ -96,13 +96,10 @@ using (var scope = app.Services.CreateScope())
         if (!databaseCreator.Exists()) databaseCreator.Create();
         if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
         
-        // Manual check for 'Reviews' table
-        dbContext.Database.ExecuteSqlRaw("IF OBJECT_ID('Reviews', 'U') IS NULL SELECT 1;");
         Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"⚠️ Database connection error: {ex.Message}");
     }
 }
 

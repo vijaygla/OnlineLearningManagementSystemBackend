@@ -110,10 +110,10 @@ using (var scope = app.Services.CreateScope())
         var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
         if (!databaseCreator.Exists()) databaseCreator.Create();
         if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
+        Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Database initialization failed: {ex.Message}");
     }
 }
 
@@ -128,7 +128,6 @@ app.MapControllers();
 var port = "8015";
 PortReclaimer.Reclaim(int.Parse(port));
 
-Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Discussion Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

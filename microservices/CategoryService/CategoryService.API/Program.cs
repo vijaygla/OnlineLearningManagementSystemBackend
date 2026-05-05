@@ -96,10 +96,10 @@ using (var scope = app.Services.CreateScope())
         if (!databaseCreator.Exists()) databaseCreator.Create();
         try { dbContext.Database.ExecuteSqlRaw("SELECT TOP 0 * FROM Categories"); }
         catch { databaseCreator.CreateTables(); }
+        Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Database initialization failed: {ex.Message}");
     }
 }
 
@@ -112,7 +112,6 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8002";
-Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Category Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

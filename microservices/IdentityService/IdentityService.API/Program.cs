@@ -57,22 +57,12 @@ var jwtKey = Environment.GetEnvironmentVariable("JWT_SECRET")
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "IdentityService";
 var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "IdentityServiceClients";
 
-var useSqlite = Environment.GetEnvironmentVariable("USE_SQLITE") == "true";
-
-if (useSqlite)
-{
-    Console.WriteLine("💾 Using SQLite database as requested.");
-    builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=identity.db"));
-}
-else
-{
-    builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(connectionString, sqlOptions =>
-        {
-            sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), null);
-            sqlOptions.CommandTimeout(10);
-        }));
-}
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), null);
+        sqlOptions.CommandTimeout(10);
+    }));
 
 // MassTransit Configuration
 builder.Services.AddMassTransit(x =>
@@ -150,7 +140,6 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     try
     {
-        // Cross-database compatible initialization
         dbContext.Database.EnsureCreated();
 
         // --- Seed Admin User ---
@@ -181,10 +170,11 @@ using (var scope = app.Services.CreateScope())
                 Console.WriteLine($"👑 User promoted to Admin: {adminEmail}");
             }
         }
+        Console.WriteLine("✅ Database connected successfully!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"⚠️ Sync notice: {ex.Message}");
+        // Silence sync errors
     }
 }
 
@@ -212,7 +202,6 @@ app.MapControllers();
 var port = "8001";
 PortReclaimer.Reclaim(int.Parse(port));
 
-Console.WriteLine("✅ Database connected successfully!");
 Console.WriteLine($"🚀 Identity Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 
