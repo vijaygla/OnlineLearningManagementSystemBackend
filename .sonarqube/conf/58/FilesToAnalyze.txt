@@ -1,0 +1,3 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Infrastructure\Data\UserDbContext.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Infrastructure\Repositories\UserProfileRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Infrastructure\UserService.Infrastructure.csproj.lscache

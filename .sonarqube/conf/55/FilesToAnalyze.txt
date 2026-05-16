@@ -1,0 +1,15 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\tests\AssessmentService.Tests\AssessmentServiceTests.cs
+C:\Users\pmdhrs\.nuget\packages\microsoft.net.test.sdk\17.14.1\build\net8.0\Microsoft.NET.Test.Sdk.Program.cs
+C:\Users\pmdhrs\.nuget\packages\microsoft.testplatform.testhost\17.14.1\build\net8.0\x64\testhost.exe
+C:\Users\pmdhrs\.nuget\packages\microsoft.testplatform.testhost\17.14.1\build\net8.0\x64\testhost.dll
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\NUnit3.TestAdapter.pdb
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\nunit.engine.dll
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\nunit.engine.api.dll
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\nunit.engine.core.dll
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\testcentric.engine.metadata.dll
+C:\v\olms\OnlineLearningManagementSystemBackend\tests\AssessmentService.Tests\AssessmentService.Tests.csproj.lscache
+C:\v\olms\OnlineLearningManagementSystemBackend\tests\AssessmentService.Tests\TestResults\3a6105ef-c7f4-44da-8554-77894496c161\coverage.opencover.xml
+C:\v\olms\OnlineLearningManagementSystemBackend\tests\AssessmentService.Tests\TestResults\8c1f2b8c-5f68-4ed2-8d84-4a6cdf413c57\coverage.opencover.xml
+C:\v\olms\OnlineLearningManagementSystemBackend\tests\AssessmentService.Tests\TestResults\e1678959-e555-429b-abc5-a960ef17782e\coverage.opencover.xml
+C:\v\olms\OnlineLearningManagementSystemBackend\tests\AssessmentService.Tests\TestResults\edeb57b7-3f5b-4da7-868f-f600f25ff720\coverage.opencover.xml
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\NUnit3.TestAdapter.dll

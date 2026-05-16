@@ -1,0 +1,3 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Domain\Entities\DiscussionComment.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Domain\Entities\DiscussionThread.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Domain\DiscussionService.Domain.csproj.lscache

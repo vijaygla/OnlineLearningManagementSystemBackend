@@ -1,0 +1,11 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\Controllers\CategoriesController.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\Program.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\obj\Debug\net10.0\CategoryService.API.GlobalUsings.g.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\obj\Debug\net10.0\CategoryService.API.AssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\obj\Debug\net10.0\CategoryService.API.MvcApplicationPartsAssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\appsettings.Development.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\appsettings.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\CategoryService.API.csproj.lscache
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\CategoryService.API.http
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.API\Properties\launchSettings.json

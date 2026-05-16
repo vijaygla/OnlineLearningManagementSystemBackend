@@ -1,0 +1,11 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\Controllers\AssessmentsController.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\Program.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\obj\Debug\net10.0\AssessmentService.API.GlobalUsings.g.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\obj\Debug\net10.0\AssessmentService.API.AssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\obj\Debug\net10.0\AssessmentService.API.MvcApplicationPartsAssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\appsettings.Development.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\appsettings.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\AssessmentService.API.csproj.lscache
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\AssessmentService.API.http
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.API\Properties\launchSettings.json

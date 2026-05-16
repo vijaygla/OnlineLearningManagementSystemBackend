@@ -1,0 +1,2 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.Domain\Entities\Category.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.Domain\CategoryService.Domain.csproj.lscache

@@ -1,0 +1,3 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Infrastructure\Data\DiscussionDbContext.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Infrastructure\Repositories\DiscussionRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Infrastructure\DiscussionService.Infrastructure.csproj.lscache

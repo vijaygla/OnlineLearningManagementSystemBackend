@@ -1,0 +1,3 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.Application\Interfaces\IMediaRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.Application\Interfaces\IStorageService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.Application\MediaService.Application.csproj.lscache

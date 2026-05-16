@@ -1,0 +1,2 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.Domain\Entities\Enrollment.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.Domain\EnrollmentService.Domain.csproj.lscache

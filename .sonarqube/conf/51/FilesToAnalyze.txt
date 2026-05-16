@@ -1,0 +1,11 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\Controllers\SearchController.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\Program.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\obj\Debug\net10.0\SearchService.API.GlobalUsings.g.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\obj\Debug\net10.0\SearchService.API.AssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\obj\Debug\net10.0\SearchService.API.MvcApplicationPartsAssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\appsettings.Development.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\appsettings.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\SearchService.API.csproj.lscache
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\SearchService.API.http
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.API\Properties\launchSettings.json

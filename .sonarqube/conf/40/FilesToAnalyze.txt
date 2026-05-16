@@ -1,0 +1,3 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CertificateService\CertificateService.Infrastructure\Data\CertificateDbContext.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CertificateService\CertificateService.Infrastructure\Repositories\CertificateRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CertificateService\CertificateService.Infrastructure\CertificateService.Infrastructure.csproj.lscache

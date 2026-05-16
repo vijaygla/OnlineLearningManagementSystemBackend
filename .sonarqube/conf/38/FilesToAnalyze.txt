@@ -1,0 +1,5 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ProgressService\ProgressService.Application\DTOs\ProgressDtos.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ProgressService\ProgressService.Application\Interfaces\IProgressRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ProgressService\ProgressService.Application\Interfaces\IProgressService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ProgressService\ProgressService.Application\Services\ProgressService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ProgressService\ProgressService.Application\ProgressService.Application.csproj.lscache

@@ -93,4 +93,21 @@
     <Project Path="microservices/UserService/UserService.Domain/UserService.Domain.csproj" />
     <Project Path="microservices/UserService/UserService.Infrastructure/UserService.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AssessmentService.Tests/AssessmentService.Tests.csproj" />
+    <Project Path="tests/CategoryService.Tests/CategoryService.Tests.csproj" />
+    <Project Path="tests/CertificateService.Tests/CertificateService.Tests.csproj" />
+    <Project Path="tests/ContentService.Tests/ContentService.Tests.csproj" />
+    <Project Path="tests/CourseService.Tests/CourseService.Tests.csproj" />
+    <Project Path="tests/DiscussionService.Tests/DiscussionService.Tests.csproj" />
+    <Project Path="tests/EnrollmentService.Tests/EnrollmentService.Tests.csproj" />
+    <Project Path="tests/IdentityService.Tests/IdentityService.Tests.csproj" />
+    <Project Path="tests/MediaService.Tests/MediaService.Tests.csproj" />
+    <Project Path="tests/NotificationService.Tests/NotificationService.Tests.csproj" />
+    <Project Path="tests/PaymentService.Tests/PaymentService.Tests.csproj" />
+    <Project Path="tests/ProgressService.Tests/ProgressService.Tests.csproj" />
+    <Project Path="tests/ReviewService.Tests/ReviewService.Tests.csproj" />
+    <Project Path="tests/SearchService.Tests/SearchService.Tests.csproj" />
+    <Project Path="tests/UserService.Tests/UserService.Tests.csproj" />
+  </Folder>
 </Solution>

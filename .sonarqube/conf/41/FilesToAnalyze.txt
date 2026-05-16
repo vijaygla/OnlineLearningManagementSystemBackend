@@ -1,0 +1,5 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.Application\DTOs\DTOs.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.Application\Interfaces\IReviewRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.Application\Interfaces\IReviewService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.Application\Services\ReviewService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.Application\ReviewService.Application.csproj.lscache

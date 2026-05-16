@@ -1,0 +1,5 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Domain\Entities\EnrolledCourse.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Domain\Entities\SocialLink.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Domain\Entities\UserPreference.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Domain\Entities\UserProfile.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Domain\UserService.Domain.csproj.lscache

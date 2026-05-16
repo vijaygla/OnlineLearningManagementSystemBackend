@@ -1,0 +1,11 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\Controllers\EnrollmentController.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\Program.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\obj\Debug\net10.0\EnrollmentService.API.GlobalUsings.g.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\obj\Debug\net10.0\EnrollmentService.API.AssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\obj\Debug\net10.0\EnrollmentService.API.MvcApplicationPartsAssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\appsettings.Development.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\appsettings.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\EnrollmentService.API.csproj.lscache
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\EnrollmentService.API.http
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.API\Properties\launchSettings.json

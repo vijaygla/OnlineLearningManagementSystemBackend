@@ -1,0 +1,3 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.Infrastructure\Data\CategoryDbContext.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.Infrastructure\Repositories\CategoryRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.Infrastructure\CategoryService.Infrastructure.csproj.lscache

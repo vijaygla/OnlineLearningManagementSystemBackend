@@ -1,0 +1,2 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\NotificationService\NotificationService.Domain\Entities\Notification.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\NotificationService\NotificationService.Domain\NotificationService.Domain.csproj.lscache

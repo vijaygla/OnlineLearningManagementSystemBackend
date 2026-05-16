@@ -1,0 +1,15 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\tests\PaymentService.Tests\PaymentServiceTests.cs
+C:\Users\pmdhrs\.nuget\packages\microsoft.net.test.sdk\17.14.1\build\net8.0\Microsoft.NET.Test.Sdk.Program.cs
+C:\Users\pmdhrs\.nuget\packages\microsoft.testplatform.testhost\17.14.1\build\net8.0\x64\testhost.exe
+C:\Users\pmdhrs\.nuget\packages\microsoft.testplatform.testhost\17.14.1\build\net8.0\x64\testhost.dll
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\NUnit3.TestAdapter.pdb
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\nunit.engine.dll
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\nunit.engine.api.dll
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\nunit.engine.core.dll
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\testcentric.engine.metadata.dll
+C:\v\olms\OnlineLearningManagementSystemBackend\tests\PaymentService.Tests\PaymentService.Tests.csproj.lscache
+C:\v\olms\OnlineLearningManagementSystemBackend\tests\PaymentService.Tests\TestResults\3ac95389-e0b0-4022-86f8-e621eda1a51c\coverage.opencover.xml
+C:\v\olms\OnlineLearningManagementSystemBackend\tests\PaymentService.Tests\TestResults\41ec09ff-6507-4c55-9f99-26cb2ce56268\coverage.opencover.xml
+C:\v\olms\OnlineLearningManagementSystemBackend\tests\PaymentService.Tests\TestResults\7d1083ba-84e9-4ee9-acd7-5eba1b95c865\coverage.opencover.xml
+C:\v\olms\OnlineLearningManagementSystemBackend\tests\PaymentService.Tests\TestResults\e6144f33-191b-459a-aa91-d6a67e8f252c\coverage.opencover.xml
+C:\Users\pmdhrs\.nuget\packages\nunit3testadapter\5.0.0\build\netcoreapp3.1\NUnit3.TestAdapter.dll

@@ -1,0 +1,11 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\Controllers\ReviewsController.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\Program.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\obj\Debug\net10.0\ReviewService.API.GlobalUsings.g.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\obj\Debug\net10.0\ReviewService.API.AssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\obj\Debug\net10.0\ReviewService.API.MvcApplicationPartsAssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\appsettings.Development.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\appsettings.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\ReviewService.API.csproj.lscache
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\ReviewService.API.http
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.API\Properties\launchSettings.json

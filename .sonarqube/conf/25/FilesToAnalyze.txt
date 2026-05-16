@@ -1,0 +1,16 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\Controllers\AuthController.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\Controllers\UsersController.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\Extensions\ApplicationBuilderExtensions.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\Extensions\ServiceExtensions.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\Middlewares\ExceptionMiddleware.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\Program.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\obj\Debug\net10.0\IdentityService.API.GlobalUsings.g.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\obj\Debug\net10.0\IdentityService.API.AssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\obj\Debug\net10.0\IdentityService.API.MvcApplicationPartsAssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\appsettings.Development.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\appsettings.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\identity.db
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\IdentityService.API.csproj.lscache
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\IdentityService.API.http
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.API\Properties\launchSettings.json

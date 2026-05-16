@@ -1,0 +1,5 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.Application\DTOs\EnrollmentDtos.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.Application\Interfaces\IEnrollmentRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.Application\Interfaces\IEnrollmentService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.Application\Services\EnrollmentService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.Application\EnrollmentService.Application.csproj.lscache

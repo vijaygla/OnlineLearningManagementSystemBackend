@@ -1,0 +1,15 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\DTOs\AuthResponseDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\DTOs\GoogleLoginRequestDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\DTOs\LoginRequestDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\DTOs\RegisterRequestDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\DTOs\ResendOtpRequestDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\DTOs\ResetPasswordRequestDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\DTOs\VerifyOtpRequestDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\Interfaces\IAuthService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\Interfaces\ITokenService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\Interfaces\IUserRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\Interfaces\IUserService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\Services\AuthService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\Services\UserService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\Validators\RegisterValidator.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Application\IdentityService.Application.csproj.lscache

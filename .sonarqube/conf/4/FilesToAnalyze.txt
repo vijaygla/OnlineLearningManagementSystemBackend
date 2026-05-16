@@ -1,0 +1,10 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\gateway\ApiGateway\Program.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\gateway\ApiGateway\obj\Debug\net10.0\ApiGateway.GlobalUsings.g.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\gateway\ApiGateway\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\gateway\ApiGateway\obj\Debug\net10.0\ApiGateway.AssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\gateway\ApiGateway\obj\Debug\net10.0\ApiGateway.MvcApplicationPartsAssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\gateway\ApiGateway\appsettings.Development.json
+C:\v\olms\OnlineLearningManagementSystemBackend\gateway\ApiGateway\appsettings.json
+C:\v\olms\OnlineLearningManagementSystemBackend\gateway\ApiGateway\ApiGateway.csproj.lscache
+C:\v\olms\OnlineLearningManagementSystemBackend\gateway\ApiGateway\ApiGateway.http
+C:\v\olms\OnlineLearningManagementSystemBackend\gateway\ApiGateway\Properties\launchSettings.json

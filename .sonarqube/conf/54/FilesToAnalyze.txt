@@ -1,0 +1,11 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\Controllers\MediaController.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\Program.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\obj\Debug\net10.0\MediaService.API.GlobalUsings.g.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\obj\Debug\net10.0\.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\obj\Debug\net10.0\MediaService.API.AssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\obj\Debug\net10.0\MediaService.API.MvcApplicationPartsAssemblyInfo.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\appsettings.Development.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\appsettings.json
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\MediaService.API.csproj.lscache
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\MediaService.API.http
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.API\Properties\launchSettings.json

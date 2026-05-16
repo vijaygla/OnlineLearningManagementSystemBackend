@@ -1,0 +1,11 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\Consumers\EnrollmentCreatedConsumer.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\Consumers\ProgressUpdatedConsumer.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\Consumers\UserCreatedConsumer.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\DTOs\EnrolledCourseDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\DTOs\SocialLinkDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\DTOs\UpdateUserProfileDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\DTOs\UserProfileDto.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\Interfaces\IUserProfileRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\Interfaces\IUserService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\Services\UserService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\UserService\UserService.Application\UserService.Application.csproj.lscache

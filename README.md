@@ -227,33 +227,8 @@ Use the same pattern for the remaining services:
 dotnet run --project microservices/<ServiceName>/<ServiceName>.API/<ServiceName>.API.csproj
 ```
 
-## Run with Docker
-
-From the repository root:
-
-```powershell
-docker-compose -f docker/docker-compose.yml --env-file docker/.env up -d --build
-```
-
-Or from the `docker/` folder:
-
-```powershell
-cd docker
-docker-compose --env-file .env up -d --build
-```
-
-Useful Docker commands:
-
-| Task | Command |
-| --- | --- |
-| Start everything | `docker-compose -f docker/docker-compose.yml --env-file docker/.env up -d --build` |
-| Rebuild after code changes | `docker-compose -f docker/docker-compose.yml --env-file docker/.env up -d --build --force-recreate` |
-| Stop everything | `docker-compose -f docker/docker-compose.yml down` |
-| Check service status | `docker-compose -f docker/docker-compose.yml ps` |
-| View MediaService logs | `docker-compose -f docker/docker-compose.yml logs -f mediaservice` |
-| Remove containers and volumes | `docker-compose -f docker/docker-compose.yml down -v` |
-
-`down -v` deletes Docker volumes, including local MinIO and Meilisearch data.
+## Docker
+docker compose -f C:\v\olms\OnlineLearningManagementSystemBackend\docker\docker-compose.infra.yml -p docker up -d
 
 ## Entity Framework Core
 

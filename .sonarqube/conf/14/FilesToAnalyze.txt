@@ -1,0 +1,5 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Application\DTOs\DiscussionDtos.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Application\Interfaces\IDiscussionRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Application\Interfaces\IDiscussionService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Application\Services\DiscussionService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\DiscussionService\DiscussionService.Application\DiscussionService.Application.csproj.lscache

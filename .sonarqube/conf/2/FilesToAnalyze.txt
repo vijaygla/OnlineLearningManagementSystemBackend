@@ -1,0 +1,2 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CertificateService\CertificateService.Domain\Entities\Certificate.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CertificateService\CertificateService.Domain\CertificateService.Domain.csproj.lscache

@@ -1,0 +1,4 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CourseService\CourseService.Application\Interfaces\ICourseRepository.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CourseService\CourseService.Application\Interfaces\ICourseService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CourseService\CourseService.Application\Services\CourseService.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CourseService\CourseService.Application\CourseService.Application.csproj.lscache

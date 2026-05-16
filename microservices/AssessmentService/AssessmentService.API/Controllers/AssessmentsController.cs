@@ -27,11 +27,57 @@ public class AssessmentsController : ControllerBase
         return Ok(quiz);
     }
 
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin,Instructor")]
+    public async Task<IActionResult> UpdateQuiz(Guid id, CreateQuizRequest request)
+    {
+        try
+        {
+            await _service.UpdateQuizAsync(id, request);
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin,Instructor")]
+    public async Task<IActionResult> DeleteQuiz(Guid id)
+    {
+        await _service.DeleteQuizAsync(id);
+        return NoContent();
+    }
+
     [HttpPost("{quizId}/questions")]
     [Authorize(Roles = "Admin,Instructor")]
     public async Task<IActionResult> AddQuestion(Guid quizId, AddQuestionRequest request)
     {
         await _service.AddQuestionAsync(quizId, request);
+        return NoContent();
+    }
+
+    [HttpPut("questions/{questionId}")]
+    [Authorize(Roles = "Admin,Instructor")]
+    public async Task<IActionResult> UpdateQuestion(Guid questionId, AddQuestionRequest request)
+    {
+        try
+        {
+            await _service.UpdateQuestionAsync(questionId, request);
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
+    [HttpDelete("questions/{questionId}")]
+    [Authorize(Roles = "Admin,Instructor")]
+    public async Task<IActionResult> DeleteQuestion(Guid questionId)
+    {
+        await _service.DeleteQuestionAsync(questionId);
         return NoContent();
     }
 

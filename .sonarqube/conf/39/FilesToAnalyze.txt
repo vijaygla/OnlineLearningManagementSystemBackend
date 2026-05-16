@@ -1,0 +1,2 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.Domain\Entities\Review.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ReviewService\ReviewService.Domain\ReviewService.Domain.csproj.lscache

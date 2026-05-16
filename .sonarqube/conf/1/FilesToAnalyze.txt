@@ -1,0 +1,12 @@
+﻿C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Base\BaseAuditableEntity.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Base\BaseEntity.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Contracts\Events\CourseApprovedEvent.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Contracts\Events\EnrollmentCreatedEvent.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Contracts\Events\ForgotPasswordEvent.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Contracts\Events\PaymentCompletedEvent.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Contracts\Events\ProgressUpdatedEvent.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Contracts\Events\UserCreatedEvent.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Contracts\Events\UserDeletedEvent.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Enums\CommonEnums.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\Utilities\PortReclaimer.cs
+C:\v\olms\OnlineLearningManagementSystemBackend\shared\SharedKernel\SharedKernel.csproj.lscache

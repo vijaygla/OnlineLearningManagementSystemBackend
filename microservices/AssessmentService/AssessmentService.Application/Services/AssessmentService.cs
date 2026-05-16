@@ -30,6 +30,23 @@ public class AssessmentService : IAssessmentService
         return new QuizDto(quiz.Id, quiz.CourseId, quiz.Title, quiz.Description, quiz.PassingScore);
     }
 
+    public async Task UpdateQuizAsync(Guid id, CreateQuizRequest request)
+    {
+        var quiz = await _repo.GetQuizByIdAsync(id);
+        if (quiz == null) throw new KeyNotFoundException("Quiz not found");
+
+        quiz.Title = request.Title;
+        quiz.Description = request.Description;
+        quiz.PassingScore = request.PassingScore;
+
+        await _repo.UpdateQuizAsync(quiz);
+    }
+
+    public async Task DeleteQuizAsync(Guid id)
+    {
+        await _repo.DeleteQuizAsync(id);
+    }
+
     public async Task AddQuestionAsync(Guid quizId, AddQuestionRequest request)
     {
         var question = new Question
@@ -42,6 +59,23 @@ public class AssessmentService : IAssessmentService
         };
 
         await _repo.AddQuestionAsync(question);
+    }
+
+    public async Task UpdateQuestionAsync(Guid questionId, AddQuestionRequest request)
+    {
+        var question = await _repo.GetQuestionByIdAsync(questionId);
+        if (question == null) throw new KeyNotFoundException("Question not found");
+
+        question.Text = request.Text;
+        question.Options = string.Join(";", request.Options);
+        question.CorrectOptionIndex = request.CorrectOptionIndex;
+
+        await _repo.UpdateQuestionAsync(question);
+    }
+
+    public async Task DeleteQuestionAsync(Guid questionId)
+    {
+        await _repo.DeleteQuestionAsync(questionId);
     }
 
     public async Task<IEnumerable<QuizDto>> GetQuizzesForCourseAsync(Guid courseId)
