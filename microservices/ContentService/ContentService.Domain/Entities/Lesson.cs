@@ -16,5 +16,6 @@ public class Lesson : BaseAuditableEntity
     public int Order { get; set; } // Sequence of the lesson in the section
     
     // Navigation property
-    public Section Section { get; set; } = null!;
+    [System.Text.Json.Serialization.JsonIgnore]
+    public Section? Section { get; set; }
 }

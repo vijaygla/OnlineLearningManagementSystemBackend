@@ -9,5 +9,6 @@ public class Section : BaseAuditableEntity
     public int Order { get; set; }
     
     // Navigation property
-    public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
+    [System.Text.Json.Serialization.JsonIgnore]
+    public ICollection<Lesson>? Lessons { get; set; } = new List<Lesson>();
 }
