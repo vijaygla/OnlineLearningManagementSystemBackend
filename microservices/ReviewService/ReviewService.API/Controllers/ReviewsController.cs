@@ -1,13 +1,14 @@
-using ReviewService.Application.DTOs;
-using ReviewService.Application.Interfaces;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using ReviewService.Application.DTOs;
+using ReviewService.Application.Interfaces;
 
 namespace ReviewService.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ReviewsController : ControllerBase
 {
     private readonly IReviewService _service;
@@ -18,14 +19,14 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
-    public async Task<IActionResult> Create(CreateReviewRequest request)
+    public async Task<IActionResult> CreateReview(CreateReviewRequest request)
     {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized();
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null) return Unauthorized();
 
-        var studentId = Guid.Parse(userIdClaim);
-        
+        if (!Guid.TryParse(userIdClaim.Value, out var studentId))
+            return BadRequest("Invalid student ID.");
+
         try
         {
             var result = await _service.CreateReviewAsync(studentId, request);
@@ -38,51 +39,64 @@ public class ReviewsController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize]
-    public async Task<IActionResult> Update(Guid id, UpdateReviewRequest request)
+    public async Task<IActionResult> UpdateReview(Guid id, UpdateReviewRequest request)
     {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized();
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null) return Unauthorized();
 
-        var studentId = Guid.Parse(userIdClaim);
+        if (!Guid.TryParse(userIdClaim.Value, out var studentId))
+            return BadRequest("Invalid student ID.");
 
         try
         {
             await _service.UpdateReviewAsync(id, studentId, request);
             return NoContent();
         }
-        catch (KeyNotFoundException) { return NotFound(new { message = "Review not found." }); }
-        catch (UnauthorizedAccessException) { return Forbid(); }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
     }
 
     [HttpDelete("{id}")]
-    [Authorize]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> DeleteReview(Guid id)
     {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var roleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
-        
-        if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized();
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        var userRoleClaim = User.FindFirst(ClaimTypes.Role);
+        if (userIdClaim == null) return Unauthorized();
 
-        var studentId = Guid.Parse(userIdClaim);
+        if (!Guid.TryParse(userIdClaim.Value, out var studentId))
+            return BadRequest("Invalid student ID.");
 
         try
         {
-            await _service.DeleteReviewAsync(id, studentId, roleClaim ?? "");
+            await _service.DeleteReviewAsync(id, studentId, userRoleClaim?.Value ?? "User");
             return NoContent();
         }
-        catch (KeyNotFoundException) { return NotFound(new { message = "Review not found." }); }
-        catch (UnauthorizedAccessException) { return Forbid(); }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
     }
 
     [HttpGet("course/{courseId}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetCourseReviews(Guid courseId)
     {
-        var result = await _service.GetCourseReviewsAsync(courseId);
-        return Ok(result);
+        var reviews = await _service.GetCourseReviewsAsync(courseId);
+        return Ok(reviews);
     }
 
     [HttpGet("course/{courseId}/rating")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetCourseRating(Guid courseId)
     {
         var result = await _service.GetCourseRatingAsync(courseId);

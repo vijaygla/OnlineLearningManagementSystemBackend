@@ -1,8 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
-COPY microservices/CategoryService/ microservices/CategoryService/
-COPY shared/SharedKernel/ shared/SharedKernel/
-WORKDIR /src/microservices/CategoryService/CategoryService.API
+
+COPY microservices/CategoryService/ ./
+WORKDIR /src/CategoryService.API
 RUN dotnet publish -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0

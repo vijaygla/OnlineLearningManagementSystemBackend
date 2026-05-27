@@ -1,6 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\PaymentService\PaymentService.Application\DTOs\CreatePaymentRequest.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\PaymentService\PaymentService.Application\DTOs\PaymentResponse.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\PaymentService\PaymentService.Application\Interfaces\IPaymentRepository.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\PaymentService\PaymentService.Application\Interfaces\IPaymentService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\PaymentService\PaymentService.Application\Services\PaymentService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\PaymentService\PaymentService.Application\PaymentService.Application.csproj.lscache

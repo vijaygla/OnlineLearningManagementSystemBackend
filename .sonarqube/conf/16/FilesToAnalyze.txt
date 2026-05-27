@@ -1,3 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CourseService\CourseService.Infrastructure\Data\CourseDbContext.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CourseService\CourseService.Infrastructure\Repositories\CourseRepository.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CourseService\CourseService.Infrastructure\CourseService.Infrastructure.csproj.lscache

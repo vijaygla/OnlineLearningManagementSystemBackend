@@ -1,5 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.Application\DTOs\DTOs.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.Application\Interfaces\IAssessmentRepository.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.Application\Interfaces\IAssessmentService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.Application\Services\AssessmentService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.Application\AssessmentService.Application.csproj.lscache

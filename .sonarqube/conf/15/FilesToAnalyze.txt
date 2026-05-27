@@ -1,4 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.Application\Interfaces\ICategoryRepository.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.Application\Interfaces\ICategoryService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.Application\Services\CategoryService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CategoryService\CategoryService.Application\CategoryService.Application.csproj.lscache

@@ -13,11 +13,32 @@ public class AssessmentDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Quiz>()
-            .HasMany(q => q.Questions)
-            .WithOne(q => q.Quiz)
-            .HasForeignKey(q => q.QuizId);
-
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Quiz>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
+            entity.HasMany(q => q.Questions)
+                  .WithOne(q => q.Quiz)
+                  .HasForeignKey(q => q.QuizId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Question>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Text).IsRequired();
+            entity.Property(e => e.Options).IsRequired();
+        });
+
+        modelBuilder.Entity<QuizSubmission>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasOne(s => s.Quiz)
+                  .WithMany()
+                  .HasForeignKey(s => s.QuizId)
+                  .OnDelete(DeleteBehavior.NoAction);
+        });
     }
 }

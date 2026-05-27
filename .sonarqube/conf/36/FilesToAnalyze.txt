@@ -1,2 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ProgressService\ProgressService.Domain\Entities\UserProgress.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ProgressService\ProgressService.Domain\ProgressService.Domain.csproj.lscache

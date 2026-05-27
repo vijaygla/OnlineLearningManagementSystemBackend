@@ -1,3 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.Infrastructure\Data\EnrollmentDbContext.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.Infrastructure\Repositories\EnrollmentRepository.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\EnrollmentService\EnrollmentService.Infrastructure\EnrollmentService.Infrastructure.csproj.lscache

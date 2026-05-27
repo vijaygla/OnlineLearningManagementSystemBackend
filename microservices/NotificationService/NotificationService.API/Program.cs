@@ -51,7 +51,7 @@ builder.Services.AddCors(options =>
 });
 
 // Database Configuration
-var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION") ?? builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<NotificationDbContext>(options =>
     options.UseSqlServer(connectionString, sqlOptions =>
     {
@@ -155,14 +155,9 @@ using (var scope = app.Services.CreateScope())
         var databaseCreator = dbContext.GetService<IRelationalDatabaseCreator>();
         if (!databaseCreator.Exists()) databaseCreator.Create();
         
-        // Use a more robust check for shared database: try to create tables and ignore if they already exist
-        try 
-        { 
-            databaseCreator.CreateTables(); 
-        } 
-        catch 
-        { 
-            // Tables likely already exist, which is fine in a shared database environment
+        if (!databaseCreator.HasTables())
+        {
+            databaseCreator.CreateTables();
         }
         
         Console.WriteLine("✅ Database connected successfully!");

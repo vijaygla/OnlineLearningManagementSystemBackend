@@ -1,3 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\PaymentService\PaymentService.Infrastructure\Data\PaymentDbContext.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\PaymentService\PaymentService.Infrastructure\Repositories\PaymentRepository.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\PaymentService\PaymentService.Infrastructure\PaymentService.Infrastructure.csproj.lscache

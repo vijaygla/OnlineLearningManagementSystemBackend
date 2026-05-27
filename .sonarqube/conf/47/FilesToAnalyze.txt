@@ -1,2 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.Infrastructure\Services\MeiliSearchService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.Infrastructure\SearchService.Infrastructure.csproj.lscache

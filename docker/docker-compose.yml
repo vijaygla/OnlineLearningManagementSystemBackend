@@ -7,7 +7,6 @@ services:
     ports:
       - "5001:8001"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -20,7 +19,6 @@ services:
     ports:
       - "5003:8003"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -33,7 +31,6 @@ services:
     ports:
       - "5002:8002"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -46,7 +43,6 @@ services:
     ports:
       - "5004:8004"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -59,7 +55,6 @@ services:
     ports:
       - "5005:8005"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -72,7 +67,6 @@ services:
     ports:
       - "5006:8006"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -85,7 +79,6 @@ services:
     ports:
       - "5007:8007"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -98,7 +91,6 @@ services:
     ports:
       - "5008:8008"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -111,7 +103,6 @@ services:
     ports:
       - "5009:8009"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -124,7 +115,6 @@ services:
     ports:
       - "5011:8011"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -137,7 +127,6 @@ services:
     ports:
       - "5013:8013"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
       - Stripe__PublishableKey=${STRIPE_PUBLISHABLE_KEY}
@@ -152,7 +141,6 @@ services:
     ports:
       - "5014:8014"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
       - MEILI_URL=http://meilisearch:7700
@@ -168,7 +156,6 @@ services:
     ports:
       - "5015:8015"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
     depends_on:
@@ -181,7 +168,6 @@ services:
     ports:
       - "5012:8012"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
       - MinIO__Endpoint=minio:9000
@@ -199,16 +185,18 @@ services:
     ports:
       - "5010:8010"
     environment:
-      - ConnectionStrings__DefaultConnection=${AZURE_SQL_CONNECTION}
       - JWT_SECRET=${JWT_SECRET}
       - RabbitMQ__Host=rabbitmq
-      - Smtp__Host=${SMTP_HOST:-mailhog}
-      - Smtp__Port=${SMTP_PORT:-1025}
-      - Smtp__SenderEmail=${SMTP_SENDER_EMAIL:-noreply@lms.com}
-      - Smtp__SenderName=${SMTP_SENDER_NAME:-LMS Notifications}
+      - Smtp__Host=${SMTP_HOST}
+      - Smtp__Port=${SMTP_PORT}
+      - Smtp__SenderEmail=${SMTP_SENDER_EMAIL}
+      - Smtp__SenderName=${SMTP_SENDER_NAME}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
     depends_on:
       - rabbitmq
-      - mailhog
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -287,34 +275,6 @@ services:
       - discussionservice
       - meilisearch
 
-  sonarqube:
-    image: sonarqube:10.7-community
-    ports:
-      - "9010:9000"
-    environment:
-      - SONAR_JDBC_URL=jdbc:postgresql://sonarqube_db:5432/sonar
-      - SONAR_JDBC_USERNAME=sonar
-      - SONAR_JDBC_PASSWORD=sonar
-    volumes:
-      - sonarqube_data:/opt/sonarqube/data
-      - sonarqube_extensions:/opt/sonarqube/extensions
-      - sonarqube_logs:/opt/sonarqube/logs
-    depends_on:
-      - sonarqube_db
-
-  sonarqube_db:
-    image: postgres:15
-    environment:
-      - POSTGRES_USER=sonar
-      - POSTGRES_PASSWORD=sonar
-      - POSTGRES_DB=sonar
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
 volumes:
   minio_data:
   meili_data:
-  sonarqube_data:
-  sonarqube_extensions:
-  sonarqube_logs:
-  postgres_data:

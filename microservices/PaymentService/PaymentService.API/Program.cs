@@ -11,6 +11,8 @@ using PaymentService.Application.Services;
 using PaymentService.Infrastructure.Data;
 using PaymentService.Infrastructure.Repositories;
 
+using SharedKernel.Utilities;
+
 // --- Custom .env Loader (Fix: Needs 3 levels to reach root) ---
 // ... (rest of loader code remains same)
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "../../../docker/.env");
@@ -35,7 +37,7 @@ builder.Logging.AddFilter("Microsoft.Hosting.Lifetime", LogLevel.None);
 
 builder.Services.AddControllers();
 
-var connectionString = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTION") ?? builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Database
 builder.Services.AddDbContext<PaymentDbContext>(options =>
@@ -127,6 +129,7 @@ app.MapGet("/", () => Results.Redirect("/swagger"));
 app.MapControllers();
 
 var port = "8013";
+PortReclaimer.Reclaim(int.Parse(port));
 Console.WriteLine($"🚀 Payment Service is running on port {port}");
 Console.WriteLine($"📖 Swagger UI: http://localhost:{port}/swagger");
 

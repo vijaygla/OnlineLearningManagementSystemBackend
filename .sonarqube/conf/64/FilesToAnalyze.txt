@@ -1,3 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ContentService\ContentService.Infrastructure\Data\ContentDbContext.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ContentService\ContentService.Infrastructure\Repositories\LessonRepository.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ContentService\ContentService.Infrastructure\ContentService.Infrastructure.csproj.lscache

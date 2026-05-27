@@ -12,25 +12,29 @@ namespace ReviewService.Tests;
 public class ReviewServiceTests
 {
     private Mock<IReviewRepository> _repoMock;
+    private Mock<IEnrollmentClient> _enrollmentMock;
     private Application.Services.ReviewService _service;
 
     [SetUp]
     public void Setup()
     {
         _repoMock = new Mock<IReviewRepository>();
-        _service = new Application.Services.ReviewService(_repoMock.Object);
+        _enrollmentMock = new Mock<IEnrollmentClient>();
+        _service = new Application.Services.ReviewService(_repoMock.Object, _enrollmentMock.Object);
     }
 
     [Test]
-    public async Task CreateReviewAsync_ShouldReturnReviewDto_WhenNoPreviousReview()
+    public async Task CreateReviewAsync_ShouldReturnReviewDto_WhenEnrolledAndNoPreviousReview()
     {
         // Arrange
         var studentId = Guid.NewGuid();
         var request = new CreateReviewRequest(Guid.NewGuid(), 5, "Great!");
+        var token = "test-token";
+        _enrollmentMock.Setup(e => e.IsEnrolledAsync(studentId, request.CourseId, token)).ReturnsAsync(true);
         _repoMock.Setup(r => r.GetByStudentAndCourseAsync(studentId, request.CourseId)).ReturnsAsync((Review)null!);
 
         // Act
-        var result = await _service.CreateReviewAsync(studentId, request);
+        var result = await _service.CreateReviewAsync(studentId, request, token);
 
         // Assert
         result.Should().NotBeNull();
@@ -44,11 +48,27 @@ public class ReviewServiceTests
         // Arrange
         var studentId = Guid.NewGuid();
         var request = new CreateReviewRequest(Guid.NewGuid(), 5, "Great!");
+        var token = "test-token";
+        _enrollmentMock.Setup(e => e.IsEnrolledAsync(studentId, request.CourseId, token)).ReturnsAsync(true);
         _repoMock.Setup(r => r.GetByStudentAndCourseAsync(studentId, request.CourseId)).ReturnsAsync(new Review());
 
         // Act & Assert
-        Func<Task> act = async () => await _service.CreateReviewAsync(studentId, request);
-        act.Should().ThrowAsync<InvalidOperationException>();
+        Func<Task> act = async () => await _service.CreateReviewAsync(studentId, request, token);
+        act.Should().ThrowAsync<InvalidOperationException>().WithMessage("*already reviewed*");
+    }
+
+    [Test]
+    public void CreateReviewAsync_ShouldThrowInvalidOperation_WhenNotEnrolled()
+    {
+        // Arrange
+        var studentId = Guid.NewGuid();
+        var request = new CreateReviewRequest(Guid.NewGuid(), 5, "Great!");
+        var token = "test-token";
+        _enrollmentMock.Setup(e => e.IsEnrolledAsync(studentId, request.CourseId, token)).ReturnsAsync(false);
+
+        // Act & Assert
+        Func<Task> act = async () => await _service.CreateReviewAsync(studentId, request, token);
+        act.Should().ThrowAsync<InvalidOperationException>().WithMessage("*Only enrolled students*");
     }
 
     [Test]

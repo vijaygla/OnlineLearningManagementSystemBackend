@@ -24,6 +24,7 @@ public class AssessmentRepository : IAssessmentRepository
     public async Task<IEnumerable<Quiz>> GetQuizzesByCourseIdAsync(Guid courseId)
     {
         return await _context.Quizzes
+            .Include(q => q.Questions)
             .Where(q => q.CourseId == courseId)
             .ToListAsync();
     }
@@ -87,6 +88,7 @@ public class AssessmentRepository : IAssessmentRepository
     {
         return await _context.Submissions
             .Where(s => s.StudentId == studentId)
+            .OrderByDescending(s => s.SubmittedAt)
             .ToListAsync();
     }
 }

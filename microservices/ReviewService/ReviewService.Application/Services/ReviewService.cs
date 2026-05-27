@@ -15,6 +15,7 @@ public class ReviewService : IReviewService
 
     public async Task<ReviewDto> CreateReviewAsync(Guid studentId, CreateReviewRequest request)
     {
+        // First check if already reviewed
         var existing = await _repo.GetByStudentAndCourseAsync(studentId, request.CourseId);
         if (existing != null)
         {
@@ -28,7 +29,8 @@ public class ReviewService : IReviewService
             CourseId = request.CourseId,
             Rating = request.Rating,
             Comment = request.Comment,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = studentId.ToString()
         };
 
         await _repo.AddAsync(review);
@@ -44,6 +46,7 @@ public class ReviewService : IReviewService
         review.Rating = request.Rating;
         review.Comment = request.Comment;
         review.LastModifiedAt = DateTime.UtcNow;
+        review.LastModifiedBy = studentId.ToString();
 
         await _repo.UpdateAsync(review);
     }

@@ -1,5 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.Application\Consumers\CourseApprovedConsumer.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.Application\Consumers\UserCreatedConsumer.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.Application\Consumers\UserDeletedConsumer.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.Application\Interfaces\ISearchService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.Application\SearchService.Application.csproj.lscache

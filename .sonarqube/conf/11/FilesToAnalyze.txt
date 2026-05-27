@@ -1,5 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CertificateService\CertificateService.Application\DTOs\DTOs.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CertificateService\CertificateService.Application\Interfaces\ICertificateRepository.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CertificateService\CertificateService.Application\Interfaces\ICertificateService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CertificateService\CertificateService.Application\Services\CertificateService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\CertificateService\CertificateService.Application\CertificateService.Application.csproj.lscache

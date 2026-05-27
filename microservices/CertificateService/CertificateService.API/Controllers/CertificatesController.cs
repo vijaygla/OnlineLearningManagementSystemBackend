@@ -19,11 +19,13 @@ public class CertificatesController : ControllerBase
     }
 
     [HttpPost("issue")]
-    [Authorize(Roles = "Admin,Instructor")]
     public async Task<IActionResult> IssueCertificate(IssueCertificateRequest request)
     {
-        var issuedBy = User.FindFirst(ClaimTypes.Name)?.Value ?? "System";
-        var certificate = await _service.IssueCertificateAsync(request, issuedBy);
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (request.StudentId.ToString() != userIdClaim && !User.IsInRole("Admin"))
+            return Forbid();
+
+        var certificate = await _service.IssueCertificateAsync(request);
         return Ok(certificate);
     }
 
@@ -45,12 +47,31 @@ public class CertificatesController : ControllerBase
         if (certificate == null) return NotFound();
 
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var userRoleClaim = User.FindFirst(ClaimTypes.Role)?.Value;
-
-        if (certificate.StudentId.ToString() != userIdClaim && userRoleClaim != "Admin")
+        if (certificate.StudentId.ToString() != userIdClaim && !User.IsInRole("Admin"))
             return Forbid();
 
         return Ok(certificate);
+    }
+
+    [HttpGet("{id}/download")]
+    public async Task<IActionResult> DownloadCertificate(Guid id)
+    {
+        try
+        {
+            var certificate = await _service.GetCertificateByIdAsync(id);
+            if (certificate == null) return NotFound();
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (certificate.StudentId.ToString() != userIdClaim && !User.IsInRole("Admin"))
+                return Forbid();
+
+            var pdfBytes = await _service.GenerateCertificatePdfAsync(id);
+            return File(pdfBytes, "application/pdf", $"Certificate-{certificate.CertificateNumber}.pdf");
+        }
+        catch (Exception)
+        {
+            return BadRequest("Failed to generate PDF.");
+        }
     }
 
     [HttpGet("verify/{certificateNumber}")]

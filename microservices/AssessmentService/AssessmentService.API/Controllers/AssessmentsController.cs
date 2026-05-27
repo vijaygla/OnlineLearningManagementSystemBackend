@@ -29,17 +29,10 @@ public class AssessmentsController : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin,Instructor")]
-    public async Task<IActionResult> UpdateQuiz(Guid id, CreateQuizRequest request)
+    public async Task<IActionResult> UpdateQuiz(Guid id, UpdateQuizRequest request)
     {
-        try
-        {
-            await _service.UpdateQuizAsync(id, request);
-            return NoContent();
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound();
-        }
+        await _service.UpdateQuizAsync(id, request);
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
@@ -58,26 +51,19 @@ public class AssessmentsController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut("questions/{questionId}")]
+    [HttpPut("questions/{id}")]
     [Authorize(Roles = "Admin,Instructor")]
-    public async Task<IActionResult> UpdateQuestion(Guid questionId, AddQuestionRequest request)
+    public async Task<IActionResult> UpdateQuestion(Guid id, UpdateQuestionRequest request)
     {
-        try
-        {
-            await _service.UpdateQuestionAsync(questionId, request);
-            return NoContent();
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound();
-        }
+        await _service.UpdateQuestionAsync(id, request);
+        return NoContent();
     }
 
-    [HttpDelete("questions/{questionId}")]
+    [HttpDelete("questions/{id}")]
     [Authorize(Roles = "Admin,Instructor")]
-    public async Task<IActionResult> DeleteQuestion(Guid questionId)
+    public async Task<IActionResult> DeleteQuestion(Guid id)
     {
-        await _service.DeleteQuestionAsync(questionId);
+        await _service.DeleteQuestionAsync(id);
         return NoContent();
     }
 
@@ -89,12 +75,12 @@ public class AssessmentsController : ControllerBase
     }
 
     [HttpGet("{quizId}")]
-    public async Task<IActionResult> GetQuizQuestions(Guid quizId)
+    public async Task<IActionResult> GetQuiz(Guid quizId)
     {
         try
         {
-            var questions = await _service.GetQuizQuestionsAsync(quizId);
-            return Ok(questions);
+            var quiz = await _service.GetQuizByIdAsync(quizId);
+            return Ok(quiz);
         }
         catch (KeyNotFoundException)
         {
@@ -119,5 +105,16 @@ public class AssessmentsController : ControllerBase
         {
             return NotFound();
         }
+    }
+
+    [HttpGet("my-submissions")]
+    public async Task<IActionResult> GetMySubmissions()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized();
+
+        var studentId = Guid.Parse(userIdClaim);
+        var subs = await _service.GetStudentSubmissionsAsync(studentId);
+        return Ok(subs);
     }
 }

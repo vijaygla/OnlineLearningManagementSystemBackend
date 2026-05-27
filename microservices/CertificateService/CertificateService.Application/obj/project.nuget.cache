@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Ppw00Jt3SxQ=",
+  "success": true,
+  "projectFilePath": "C:\\v\\olms\\OnlineLearningManagementSystemBackend\\microservices\\CertificateService\\CertificateService.Application\\CertificateService.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pmdhrs\\.nuget\\packages\\questpdf\\2026.5.0\\questpdf.2026.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}

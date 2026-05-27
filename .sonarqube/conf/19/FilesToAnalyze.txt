@@ -1,2 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.Domain\Entities\Media.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.Domain\MediaService.Domain.csproj.lscache

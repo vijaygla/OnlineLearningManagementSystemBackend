@@ -177,7 +177,7 @@ Local secrets should not be committed. The repository ignores common secret file
 Create `docker/.env` for Docker-based development:
 
 ```env
-AZURE_SQL_CONNECTION=Server=...
+DefaultConnection=Server=localhost\\SQLEXPRESS;Database=...Db;Trusted_Connection=True;
 JWT_SECRET=replace-with-a-long-secret
 RABBITMQ_USER=guest
 RABBITMQ_PASSWORD=guest
@@ -227,8 +227,33 @@ Use the same pattern for the remaining services:
 dotnet run --project microservices/<ServiceName>/<ServiceName>.API/<ServiceName>.API.csproj
 ```
 
-## Docker
-docker compose -f C:\v\olms\OnlineLearningManagementSystemBackend\docker\docker-compose.infra.yml -p docker up -d
+## Run with Docker
+
+From the repository root:
+
+```powershell
+docker-compose -f docker/docker-compose.yml --env-file docker/.env up -d --build
+```
+
+Or from the `docker/` folder:
+
+```powershell
+cd docker
+docker-compose --env-file .env up -d --build
+```
+
+Useful Docker commands:
+
+| Task | Command |
+| --- | --- |
+| Start everything | `docker-compose -f docker/docker-compose.yml --env-file docker/.env up -d --build` |
+| Rebuild after code changes | `docker-compose -f docker/docker-compose.yml --env-file docker/.env up -d --build --force-recreate` |
+| Stop everything | `docker-compose -f docker/docker-compose.yml down` |
+| Check service status | `docker-compose -f docker/docker-compose.yml ps` |
+| View MediaService logs | `docker-compose -f docker/docker-compose.yml logs -f mediaservice` |
+| Remove containers and volumes | `docker-compose -f docker/docker-compose.yml down -v` |
+
+`down -v` deletes Docker volumes, including local MinIO and Meilisearch data.
 
 ## Entity Framework Core
 
@@ -291,4 +316,5 @@ dotnet ef database update `
 3. Follow the existing service layout.
 4. Test the affected service before opening a pull request.
 5. Update this README when routes, ports, infrastructure, or setup steps change.
+
 

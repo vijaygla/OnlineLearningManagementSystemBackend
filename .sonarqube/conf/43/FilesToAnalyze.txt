@@ -1,3 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.Domain\Entities\CourseSearchIndex.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.Domain\Entities\UserSearchIndex.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\SearchService\SearchService.Domain\SearchService.Domain.csproj.lscache

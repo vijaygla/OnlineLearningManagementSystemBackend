@@ -1,5 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Infrastructure\Configurations\JwtSettings.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Infrastructure\Data\AppDbContext.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Infrastructure\Repositories\UserRepository.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Infrastructure\Services\TokenService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Infrastructure\IdentityService.Infrastructure.csproj.lscache

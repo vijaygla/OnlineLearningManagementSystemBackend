@@ -1,4 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Domain\Entities\Role.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Domain\Entities\User.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Domain\Enums\UserRole.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\IdentityService\IdentityService.Domain\IdentityService.Domain.csproj.lscache

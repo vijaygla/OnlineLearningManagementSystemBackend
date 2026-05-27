@@ -11,14 +11,17 @@ public class CertificateDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Certificate>()
-            .HasIndex(c => c.CertificateNumber)
-            .IsUnique();
-
-        modelBuilder.Entity<Certificate>()
-            .HasIndex(c => new { c.StudentId, c.CourseId })
-            .IsUnique();
-
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Certificate>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.CertificateNumber).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.StudentName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.CourseTitle).IsRequired().HasMaxLength(200);
+            
+            entity.HasIndex(c => c.CertificateNumber).IsUnique();
+            entity.HasIndex(c => new { c.StudentId, c.CourseId }).IsUnique();
+        });
     }
 }

@@ -1,2 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.Domain\Entities\Entities.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\AssessmentService\AssessmentService.Domain\AssessmentService.Domain.csproj.lscache

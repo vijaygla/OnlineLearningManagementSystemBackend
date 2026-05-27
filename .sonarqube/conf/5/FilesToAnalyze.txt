@@ -1,2 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ContentService\ContentService.Domain\Entities\Lesson.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\ContentService\ContentService.Domain\ContentService.Domain.csproj.lscache

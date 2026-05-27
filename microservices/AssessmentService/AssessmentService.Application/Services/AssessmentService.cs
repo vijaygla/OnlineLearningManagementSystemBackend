@@ -13,6 +13,20 @@ public class AssessmentService : IAssessmentService
         _repo = repo;
     }
 
+    public async Task<QuizDto> GetQuizByIdAsync(Guid id)
+    {
+        var quiz = await _repo.GetQuizByIdAsync(id);
+        if (quiz == null) throw new KeyNotFoundException("Quiz not found");
+
+        return MapToDto(quiz);
+    }
+
+    public async Task<IEnumerable<QuizDto>> GetQuizzesForCourseAsync(Guid courseId)
+    {
+        var quizzes = await _repo.GetQuizzesByCourseIdAsync(courseId);
+        return quizzes.Select(MapToDto);
+    }
+
     public async Task<QuizDto> CreateQuizAsync(CreateQuizRequest request, string instructorId)
     {
         var quiz = new Quiz
@@ -22,15 +36,14 @@ public class AssessmentService : IAssessmentService
             Title = request.Title,
             Description = request.Description,
             PassingScore = request.PassingScore,
-            CreatedBy = instructorId,
-            CreatedAt = DateTime.UtcNow
+            CreatedBy = instructorId
         };
 
         await _repo.AddQuizAsync(quiz);
-        return new QuizDto(quiz.Id, quiz.CourseId, quiz.Title, quiz.Description, quiz.PassingScore);
+        return MapToDto(quiz);
     }
 
-    public async Task UpdateQuizAsync(Guid id, CreateQuizRequest request)
+    public async Task UpdateQuizAsync(Guid id, UpdateQuizRequest request)
     {
         var quiz = await _repo.GetQuizByIdAsync(id);
         if (quiz == null) throw new KeyNotFoundException("Quiz not found");
@@ -47,6 +60,14 @@ public class AssessmentService : IAssessmentService
         await _repo.DeleteQuizAsync(id);
     }
 
+    public async Task<QuestionDto> GetQuestionByIdAsync(Guid id)
+    {
+        var q = await _repo.GetQuestionByIdAsync(id);
+        if (q == null) throw new KeyNotFoundException("Question not found");
+
+        return MapQuestionToDto(q);
+    }
+
     public async Task AddQuestionAsync(Guid quizId, AddQuestionRequest request)
     {
         var question = new Question
@@ -61,38 +82,21 @@ public class AssessmentService : IAssessmentService
         await _repo.AddQuestionAsync(question);
     }
 
-    public async Task UpdateQuestionAsync(Guid questionId, AddQuestionRequest request)
+    public async Task UpdateQuestionAsync(Guid id, UpdateQuestionRequest request)
     {
-        var question = await _repo.GetQuestionByIdAsync(questionId);
-        if (question == null) throw new KeyNotFoundException("Question not found");
+        var q = await _repo.GetQuestionByIdAsync(id);
+        if (q == null) throw new KeyNotFoundException("Question not found");
 
-        question.Text = request.Text;
-        question.Options = string.Join(";", request.Options);
-        question.CorrectOptionIndex = request.CorrectOptionIndex;
+        q.Text = request.Text;
+        q.Options = string.Join(";", request.Options);
+        q.CorrectOptionIndex = request.CorrectOptionIndex;
 
-        await _repo.UpdateQuestionAsync(question);
+        await _repo.UpdateQuestionAsync(q);
     }
 
-    public async Task DeleteQuestionAsync(Guid questionId)
+    public async Task DeleteQuestionAsync(Guid id)
     {
-        await _repo.DeleteQuestionAsync(questionId);
-    }
-
-    public async Task<IEnumerable<QuizDto>> GetQuizzesForCourseAsync(Guid courseId)
-    {
-        var quizzes = await _repo.GetQuizzesByCourseIdAsync(courseId);
-        return quizzes.Select(q => new QuizDto(q.Id, q.CourseId, q.Title, q.Description, q.PassingScore));
-    }
-
-    public async Task<IEnumerable<QuestionDto>> GetQuizQuestionsAsync(Guid quizId)
-    {
-        var quiz = await _repo.GetQuizByIdAsync(quizId);
-        if (quiz == null) throw new KeyNotFoundException("Quiz not found");
-
-        return quiz.Questions.Select(q => new QuestionDto(
-            q.Id, 
-            q.Text, 
-            q.Options.Split(';', StringSplitOptions.RemoveEmptyEntries).ToList()));
+        await _repo.DeleteQuestionAsync(id);
     }
 
     public async Task<QuizSubmissionResponse> SubmitQuizAsync(Guid quizId, Guid studentId, SubmitQuizRequest request)
@@ -101,7 +105,7 @@ public class AssessmentService : IAssessmentService
         if (quiz == null) throw new KeyNotFoundException("Quiz not found");
 
         int correctAnswers = 0;
-        var questions = quiz.Questions.ToList();
+        var questions = quiz.Questions.OrderBy(q => q.CreatedAt).ToList();
 
         for (int i = 0; i < questions.Count; i++)
         {
@@ -126,6 +130,33 @@ public class AssessmentService : IAssessmentService
 
         await _repo.AddSubmissionAsync(submission);
 
-        return new QuizSubmissionResponse(submission.Id, score, isPassed, questions.Count);
+        return new QuizSubmissionResponse(submission.Id, score, isPassed, questions.Count, submission.SubmittedAt);
+    }
+
+    public async Task<IEnumerable<QuizSubmissionResponse>> GetStudentSubmissionsAsync(Guid studentId)
+    {
+        var subs = await _repo.GetSubmissionsByStudentIdAsync(studentId);
+        return subs.Select(s => new QuizSubmissionResponse(s.Id, s.Score, s.IsPassed, 0, s.SubmittedAt));
+    }
+
+    private static QuizDto MapToDto(Quiz q)
+    {
+        return new QuizDto(
+            q.Id, 
+            q.CourseId, 
+            q.Title, 
+            q.Description, 
+            q.PassingScore,
+            q.Questions.Select(MapQuestionToDto).ToList());
+    }
+
+    private static QuestionDto MapQuestionToDto(Question q)
+    {
+        return new QuestionDto(
+            q.Id, 
+            q.QuizId, 
+            q.Text, 
+            q.Options.Split(';', StringSplitOptions.RemoveEmptyEntries).ToList(),
+            q.CorrectOptionIndex);
     }
 }

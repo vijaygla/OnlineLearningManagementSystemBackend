@@ -1,4 +1,0 @@
-﻿C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.Infrastructure\Data\MediaDbContext.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.Infrastructure\Repositories\MediaRepository.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.Infrastructure\Services\MinioStorageService.cs
-C:\v\olms\OnlineLearningManagementSystemBackend\microservices\MediaService\MediaService.Infrastructure\MediaService.Infrastructure.csproj.lscache

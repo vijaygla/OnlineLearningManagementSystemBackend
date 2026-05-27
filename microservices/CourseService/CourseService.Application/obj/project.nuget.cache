@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "TFCf6idbviM=",
+  "success": true,
+  "projectFilePath": "C:\\v\\olms\\OnlineLearningManagementSystemBackend\\microservices\\CourseService\\CourseService.Application\\CourseService.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pmdhrs\\.nuget\\packages\\masstransit.abstractions\\8.2.5\\masstransit.abstractions.8.2.5.nupkg.sha512"
+  ],
+  "logs": []
+}

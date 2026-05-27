@@ -11,6 +11,4 @@ GET {{NotificationService_HostAddress}}/
 # Default credentials: guest / guest
 GET http://localhost:15672
 
-### Mailhog Web UI (Email Inbox)
-# All emails sent by the Notification Service in development will appear here.
-GET http://localhost:8025
+
